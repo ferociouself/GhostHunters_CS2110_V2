@@ -2,6 +2,7 @@ package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -24,8 +25,9 @@ public class Ball extends Entity{
     private Paint paint;
 
     public Ball (int fileID, int xPosition, int yPosition, float speedMod,
-                 int xMax, int yMax, int hitBoxWidth, int hitBoxHeight, float bounceFactor) {
-        super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight);
+                 int xMax, int yMax, int hitBoxWidth, int hitBoxHeight, float bounceFactor,
+                 MainActivity main) {
+        super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
         this.speedMod = speedMod;
         origSpeedMod = speedMod;
         paint = new Paint();
@@ -57,7 +59,7 @@ public class Ball extends Entity{
 
         //Add to position negative due to sensor
         //readings being opposite to what we want!
-        xPosition -= (int) xS;
+        xPosition += (int) xS;
         yPosition += (int) yS;
 
         // Creates the bouncing effect if the ball touches a side.
@@ -76,12 +78,14 @@ public class Ball extends Entity{
             yVelocity = -(yVelocity * bounceFactor);
         }
 
-        // MAKE SURE TO ALWAYS UPDATE THE HITBOX AFTER MOVING FOR EACH ENTITY!!!
+        // MAKE SURE TO ALWAYS UPDATE THE HITBOX AND CENTRAL POINT AFTER MOVING FOR EACH ENTITY!!!
         hitBoxUpdate();
+        centralPointUpdate();
+        handleCollisions(main.getEntityList());
     }
 
     public void destroyer() {
-        //TODO DESTROY STUFF!
+        main.entityRemove(this);
     }
 
     public boolean filterChanger(ColorFilter cFilter) {
@@ -92,6 +96,13 @@ public class Ball extends Entity{
     public void handleCollisions(ArrayList<Entity> entityArrayList) {
         ArrayList<Entity> collisionArrayList = new ArrayList<>();
         collisionArrayList.addAll(collisionDetect(entityArrayList));
+
+        for (Entity e : collisionArrayList) {
+            if (e instanceof Ghost && isCharged) {
+                Log.i("BALL", "Ghost collided with");
+                e.destroyer();
+            }
+        }
     }
 
     public void toggleTouching() {

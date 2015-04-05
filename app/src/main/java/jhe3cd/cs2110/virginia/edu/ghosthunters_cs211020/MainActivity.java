@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public Point size;
 
-    public int initChargerX = 300;
+    public int initChargerX = 100;
     public int chargerX = initChargerX + 10;
     public static final int CHARGER_DECAY_RATE = 3;
     // Charger decay rate in ticks per 1 decay.
@@ -58,10 +58,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public Ball ball;
 
-    public static final int BALL_WIDTH = 22;
-    public static final int BALL_HEIGHT = 22;
+    public static final int BALL_WIDTH = 40;
+    public static final int BALL_HEIGHT = 40;
 
     public ArrayList<Entity> entityList = new ArrayList<>();
+    public ArrayList<Entity> entitiesRemoved = new ArrayList<>();
 
     public int numGhostsSpawned = 4;
 
@@ -80,7 +81,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         size = new Point();
         display.getSize(size);
         xMax = size.x - 50;
-        yMax = size.y - 290;
+        yMax = size.y - 100;
 
         genericPaint = new Paint();
         bgPaint = new Paint();
@@ -104,11 +105,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         boolean worked = false;
         boolean forWorked = false;
 
-        ball = new Ball(R.drawable.ball, xMax/2, yMax/2, 1, xMax, yMax, BALL_WIDTH, BALL_HEIGHT, 0.9f);
+        ball = new Ball(R.drawable.ball, xMax/2, yMax/2, 1, xMax, yMax, BALL_WIDTH, BALL_HEIGHT,
+                0.9f, this);
         worked = entityList.add(ball);
 
         for (int i = 0; i < numGhostsSpawned; i++) {
-            Ghost tempGh = new Ghost(0, 0, R.drawable.flash_light, ball.getCentralPoint(), null, 50, 50, 50, xMax, yMax, 5.0f, 5.0f);
+            Ghost tempGh = new Ghost(0, 0, R.drawable.ghost, ball.getCentralPoint(), null, 50, 50,
+                    50, xMax, yMax, 5.0f, 5.0f, 0.9f, this);
             tempGh.randomlyGenerate();
             entityList.add(tempGh);
             forWorked = true;
@@ -151,29 +154,30 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     @Override
     public final void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            Log.i("Accelerometer X", "" + event.values[0]);
-            Log.i("Accelerometer Y", "" + event.values[1]);
-            ball.updateAcceleration(event.values[0], event.values[1]);
+            ball.updateAcceleration(event.values[1], event.values[0]);
         }
     }
 
     private void update() {
         for (Entity e : entityList) {
             e.update();
-            if (e instanceof Ghost) {
-                ((Ghost) e).updateTarget(ball.getxPosition(), ball.getyPosition(), ball.isTouching(), ball.isCharged());
-            }
-            if (e instanceof FriendlyGhost) {
-                ((FriendlyGhost) e).updateEntityList(entityList);
-            }
-            if (e instanceof Ball) {
-                ((Ball) e).handleCollisions(entityList);
-            }
         }
+        for (Entity e : entitiesRemoved) {
+            entityList.remove(e);
+        }
+        entitiesRemoved.clear();
+    }
+
+    public boolean entityRemove(Entity e) {
+        return entitiesRemoved.add(e);
     }
 
     public Ball getBall() {
         return ball;
+    }
+
+    public ArrayList<Entity> getEntityList() {
+        return entityList;
     }
 
 /*    @Override
@@ -199,6 +203,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }*/
     public class CustomDrawableView extends View {
         private Bitmap ballBMP;
+
+        private int chargerBarHeight;
+        private int chargerBarWidth;
+
         public CustomDrawableView(Context context) {
             super(context);
             /*Bitmap ballBMP = BitmapFactory.decodeResource(getResources(), R.drawable.ball);

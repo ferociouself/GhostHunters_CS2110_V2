@@ -23,8 +23,10 @@ public abstract class Entity {
 
     public int fileID;
 
+    protected MainActivity main;
+
     public Entity(int fileID, int xPosition, int yPosition, int xMax, int yMax,
-                  int hitBoxWidth, int hitBoxHeight) {
+                  int hitBoxWidth, int hitBoxHeight, MainActivity main) {
         this.fileID = fileID;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
@@ -32,12 +34,17 @@ public abstract class Entity {
         this.yMax = yMax;
         this.centralPoint = new Point(xPosition + (hitBoxWidth/2), yPosition + (hitBoxHeight/2));
         this.hitBox = new Rect(xPosition, yPosition, xPosition + hitBoxWidth, yPosition + hitBoxHeight);
+        this.main = main;
     }
 
     public abstract void update();
 
     public void hitBoxUpdate() {
         hitBox.set(xPosition, yPosition, xPosition + hitBox.width(), yPosition + hitBox.height());
+    }
+
+    public void centralPointUpdate() {
+        centralPoint.set(xPosition + (hitBox.width()/2), yPosition + (hitBox.height()/2));
     }
 
     public ArrayList<Entity> collisionDetect(ArrayList<Entity> entityArrayList) {

@@ -1,6 +1,7 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,8 +14,10 @@ public class Ghost extends Entity{
 
     private float xVelocity;
     private float yVelocity;
-    private float xAcceleration;
-    private float yAcceleration;
+    private float xOrigAcceleration = 0.0f;
+    private float yOrigAcceleration = 0.0f;
+    private float xDynAcceleration = 0.0f;
+    private float yDynAcceleration = 0.0f;
     boolean isVisible;
     private Point target;
     private Item booty;
@@ -23,60 +26,69 @@ public class Ghost extends Entity{
     private boolean ballTouching;
     private boolean ballCharged;
 
+    private float bounceFactor = 0.0f;
+
     public Ghost(int xPosition, int yPosition, int fileID, Point target, Item booty, int health,
-                 int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration, float yAcceleration) {
-        super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight);
+                 int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration,
+                 float yAcceleration, float bounceFactor, MainActivity main) {
+        super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
         this.target = target;
         this.booty = booty;
         this.health = health;
         this.xVelocity = 0;
         this.yVelocity = 0;
-        this.xAcceleration = xAcceleration;
-        this.yAcceleration = yAcceleration;
+        this.xOrigAcceleration = xAcceleration;
+        this.yOrigAcceleration = yAcceleration;
+        this.bounceFactor = bounceFactor;
         this.isVisible = false;
         this.ballTouching = false;
         this.ballCharged = false;
-    }
-
-    public void updateTarget(int x, int y, boolean isTouching, boolean isCharged) {
-        target.set(x, y);
-        ballTouching = isTouching;
-        ballCharged = isCharged;
-        update();
+        this.main = main;
     }
 
     public void update() {
+        target.set(main.getBall().getxPosition(), main.getBall().getyPosition());
+        ballTouching = main.getBall().isTouching();
+        ballCharged = main.getBall().isCharged();
         if(ballTouching && !ballCharged) {
-            if(this.xPosition < target.x) {
-                this.xAcceleration = Math.abs(xAcceleration);
-            }
-            if(this.xPosition > target.x) {
-                this.xAcceleration = -(Math.abs(xAcceleration));
-            }
-            if(this.yPosition < target.y) {
-                this.yAcceleration = Math.abs(yAcceleration);
-            }
-            if(this.yPosition > target.y) {
-                this.yAcceleration = -(Math.abs(yAcceleration));
-            }
+            xDynAcceleration = ((float)(target.x - xPosition) / (float)xMax) * xOrigAcceleration;
+            yDynAcceleration = ((float)(target.y - yPosition) / (float)yMax) * xOrigAcceleration;
+            this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
+            this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
+        } else {
+            xDynAcceleration = 0.0f;
+            yDynAcceleration = 0.0f;
+            xVelocity = xVelocity * 0.1f;
+            yVelocity = yVelocity * 0.1f;
         }
-        this.xVelocity += (xAcceleration * MainActivity.FRAME_TIME);
-        this.yVelocity += (yAcceleration * MainActivity.FRAME_TIME);
 
         //Calc distance travelled in that time
         float xS = (xVelocity/2)*MainActivity.FRAME_TIME;
         float yS = (yVelocity/2)*MainActivity.FRAME_TIME;
-
-        //Add to position negative due to sensor
-        //readings being opposite to what we want!
-        xPosition -= xS;
+        xPosition += xS;
         yPosition += yS;
 
+        if (xPosition > xMax) {
+            xPosition = xMax;
+            xVelocity = -(xVelocity * bounceFactor);
+        } else if (xPosition < 0) {
+            xPosition = 0;
+            xVelocity = -(xVelocity * bounceFactor);
+        }
+        if (yPosition > yMax) {
+            yPosition = yMax;
+            yVelocity = -(yVelocity * bounceFactor);
+        } else if (yPosition < 0) {
+            yPosition = 0;
+            yVelocity = -(yVelocity * bounceFactor);
+        }
+
         hitBoxUpdate();
+        centralPointUpdate();
     }
 
     public void destroyer() {
-
+        main.entityRemove(this);
     }
 
     public void randomlyGenerate() {
