@@ -159,6 +159,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         for (Entity e : entityList) {
             e.update();
         }
+
         ball.handleCollisions(entityList);
     }
 
