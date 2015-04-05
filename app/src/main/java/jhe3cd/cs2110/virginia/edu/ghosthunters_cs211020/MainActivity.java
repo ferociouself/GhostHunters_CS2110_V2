@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public ArrayList<Entity> entityList = new ArrayList<>();
 
-    public int numGhostsSpawned = 0;
+    public int numGhostsSpawned = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,16 +151,25 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     @Override
     public final void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            ball.updateAcceleration(event.values[1], -(event.values[0]));
+            Log.i("Accelerometer X", "" + event.values[0]);
+            Log.i("Accelerometer Y", "" + event.values[1]);
+            ball.updateAcceleration(event.values[0], event.values[1]);
         }
     }
 
     private void update() {
         for (Entity e : entityList) {
             e.update();
+            if (e instanceof Ghost) {
+                ((Ghost) e).updateTarget(ball.getxPosition(), ball.getyPosition(), ball.isTouching(), ball.isCharged());
+            }
+            if (e instanceof FriendlyGhost) {
+                ((FriendlyGhost) e).updateEntityList(entityList);
+            }
+            if (e instanceof Ball) {
+                ((Ball) e).handleCollisions(entityList);
+            }
         }
-
-        ball.handleCollisions(entityList);
     }
 
     public Ball getBall() {
