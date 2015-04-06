@@ -101,6 +101,7 @@ public class Ball extends Entity{
             if (e instanceof Ghost && isCharged) {
                 Log.i("BALL", "Ghost collided with");
                 e.destroyer();
+                main.incScore(100);
             }
         }
     }

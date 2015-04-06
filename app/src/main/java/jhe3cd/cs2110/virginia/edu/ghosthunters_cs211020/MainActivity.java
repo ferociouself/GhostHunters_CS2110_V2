@@ -65,6 +65,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public ArrayList<Entity> entitiesRemoved = new ArrayList<>();
 
     public int numGhostsSpawned = 4;
+    public int score;
 
     public static int difficulty;
 
@@ -170,6 +171,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         entitiesRemoved.clear();
     }
 
+    public int incScore(int scoreIncrease) {
+        this.score += scoreIncrease;
+        return this.score;
+    }
+
     public boolean entityRemove(Entity e) {
         return entitiesRemoved.add(e);
     }
@@ -237,6 +243,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             canvas.drawRect(initChargerX - 10, 40, initChargerX + 410, 110, chargerBGPaint);
             canvas.drawRect(initChargerX, 50, chargerX, 100, chargerPaint);
             // canvas.drawBitmap(ballBMP, ball.getxPosition(), ball.getyPosition(), ballPaint);
+            canvas.drawText("" + score, xMax - 50, yMax - 50, genericPaint);
             for (Entity e : entityList) {
                 e.draw(canvas, getResources(), genericPaint);
             }
