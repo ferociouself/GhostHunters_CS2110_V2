@@ -12,6 +12,7 @@ public class FriendlyGhost extends Ghost{
 
     private boolean isFriendly;
     int lifeSpan;
+    long timeActive;
 
     public FriendlyGhost(int xPosition, int yPosition, int fileID, Point target, Item booty, int health,
                          int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration,
@@ -34,6 +35,10 @@ public class FriendlyGhost extends Ghost{
             if(e instanceof Ghost) {
                 e.destroyer();
             }
+        }
+        timeActive++;
+        if (timeActive > lifeSpan * 1000) {
+            destroyer();
         }
     }
 

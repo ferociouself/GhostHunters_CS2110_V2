@@ -80,8 +80,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-        xMax = size.x - 50;
-        yMax = size.y - 100;
+        xMax = (int)(size.x * 0.92);
+        yMax = (int)(size.y * 0.73);
 
         genericPaint = new Paint();
         bgPaint = new Paint();
@@ -110,8 +110,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         worked = entityList.add(ball);
 
         for (int i = 0; i < numGhostsSpawned; i++) {
-            Ghost tempGh = new Ghost(0, 0, R.drawable.ghost, ball.getCentralPoint(), null, 50, 50,
-                    50, xMax, yMax, 5.0f, 5.0f, 0.9f, this);
+            Ghost tempGh = new Ghost(0, 0, R.drawable.ghost, ball.getCentralPoint(), null, 1, 32,
+                    38, xMax, yMax, 5.0f, 5.0f, 0.9f, this);
             tempGh.randomlyGenerate();
             entityList.add(tempGh);
             forWorked = true;

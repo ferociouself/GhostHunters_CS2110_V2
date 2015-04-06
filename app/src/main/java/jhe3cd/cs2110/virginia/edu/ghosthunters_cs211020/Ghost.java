@@ -52,14 +52,19 @@ public class Ghost extends Entity{
         ballCharged = main.getBall().isCharged();
         if(ballTouching && !ballCharged) {
             xDynAcceleration = ((float)(target.x - xPosition) / (float)xMax) * xOrigAcceleration;
-            yDynAcceleration = ((float)(target.y - yPosition) / (float)yMax) * xOrigAcceleration;
+            yDynAcceleration = ((float)(target.y - yPosition) / (float)yMax) * yOrigAcceleration;
             this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
             this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
+        } else if (collisionDetect(main.getEntityList()).size() > 1) {
+            ArrayList<Entity> collisionList = collisionDetect(main.getEntityList());
+            Entity avoid = collisionList.get(collisionList.size() - 1);
+            xVelocity = -((float)(avoid.getCentralPoint().x - xPosition) / (float)xMax) * xVelocity;
+            yVelocity = -((float)(avoid.getCentralPoint().y - yPosition) / (float)yMax) * yVelocity;
         } else {
             xDynAcceleration = 0.0f;
             yDynAcceleration = 0.0f;
-            xVelocity = xVelocity * 0.1f;
-            yVelocity = yVelocity * 0.1f;
+            xVelocity = xVelocity * 0.90f;
+            yVelocity = yVelocity * 0.95f;
         }
 
         //Calc distance travelled in that time
