@@ -28,6 +28,8 @@ public class Ghost extends Entity{
 
     private float bounceFactor = 0.0f;
 
+    private boolean isColliding = false;
+
     public Ghost(int xPosition, int yPosition, int fileID, Point target, Item booty, int health,
                  int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration,
                  float yAcceleration, float bounceFactor, MainActivity main) {
@@ -51,21 +53,22 @@ public class Ghost extends Entity{
         ballTouching = main.getBall().isTouching();
         ballCharged = main.getBall().isCharged();
         if(ballTouching && !ballCharged) {
-            xDynAcceleration = ((float)(target.x - xPosition) / (float)xMax) * xOrigAcceleration;
-            yDynAcceleration = ((float)(target.y - yPosition) / (float)yMax) * yOrigAcceleration;
+            if (isColliding) {
+                xDynAcceleration = -((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
+                yDynAcceleration = -((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
+            } else {
+                xDynAcceleration = ((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
+                yDynAcceleration = ((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
+            }
             this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
             this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
-        } else if (collisionDetect(main.getEntityList()).size() > 1) {
-            ArrayList<Entity> collisionList = collisionDetect(main.getEntityList());
-            Entity avoid = collisionList.get(collisionList.size() - 1);
-            xVelocity = -((float)(avoid.getCentralPoint().x - xPosition) / (float)xMax) * xVelocity;
-            yVelocity = -((float)(avoid.getCentralPoint().y - yPosition) / (float)yMax) * yVelocity;
         } else {
             xDynAcceleration = 0.0f;
             yDynAcceleration = 0.0f;
             xVelocity = xVelocity * 0.90f;
             yVelocity = yVelocity * 0.95f;
         }
+        handleCollisions();
 
         //Calc distance travelled in that time
         float xS = (xVelocity/2)*MainActivity.FRAME_TIME;
@@ -73,15 +76,15 @@ public class Ghost extends Entity{
         xPosition += xS;
         yPosition += yS;
 
-        if (xPosition > xMax) {
-            xPosition = xMax;
+        if (xPosition + hitBox.width() > xMax) {
+            xPosition = xMax - hitBox.width();
             xVelocity = -(xVelocity * bounceFactor);
         } else if (xPosition < 0) {
             xPosition = 0;
             xVelocity = -(xVelocity * bounceFactor);
         }
-        if (yPosition > yMax) {
-            yPosition = yMax;
+        if (yPosition + hitBox.height() > yMax) {
+            yPosition = yMax - hitBox.height();
             yVelocity = -(yVelocity * bounceFactor);
         } else if (yPosition < 0) {
             yPosition = 0;
@@ -94,6 +97,17 @@ public class Ghost extends Entity{
 
     public void destroyer() {
         main.entityRemove(this);
+    }
+
+    public void handleCollisions() {
+        ArrayList<Entity> collisionArrayList = new ArrayList<>();
+        collisionArrayList.addAll(collisionDetect(main.getEntityList()));
+        for (Entity e : collisionArrayList) {
+            if (e instanceof Ghost) {
+                isColliding = true;
+            }
+        }
+        isColliding = collisionArrayList.size() > 1;
     }
 
     public void randomlyGenerate() {

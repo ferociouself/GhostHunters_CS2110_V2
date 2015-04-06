@@ -66,6 +66,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public int numGhostsSpawned = 4;
 
+    public static int difficulty;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,6 +180,14 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public ArrayList<Entity> getEntityList() {
         return entityList;
+    }
+
+    public static int getDifficulty(){
+        return difficulty;
+    }
+
+    public static void setDifficulty(int newDifficulty) {
+        difficulty = newDifficulty;
     }
 
 /*    @Override

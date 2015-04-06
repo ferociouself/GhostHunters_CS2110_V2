@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -31,19 +32,13 @@ public class SplashActivity extends Activity{
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-
-
-        /*// Finding the boundaries
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);*/
-
         setContentView(R.layout.splash);
         ImageView splash_image = (ImageView)findViewById(R.id.splash_image);
         splash_image.setImageBitmap(decodeSampledBitmapFromResource(getResources(), R.drawable.splash_screen, SPLASH_REDUCER_WIDTH, SPLASH_REDUCER_HEIGHT));
 
         IntentLauncher launcher = new IntentLauncher();
         launcher.start();
+
     }
 
     private class IntentLauncher extends Thread {
@@ -54,12 +49,13 @@ public class SplashActivity extends Activity{
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
             }
-
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-            SplashActivity.this.startActivity(intent);
-            SplashActivity.this.finish();
+            Intent intent = new Intent(SplashActivity.this, BeginActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
+
+
 
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
