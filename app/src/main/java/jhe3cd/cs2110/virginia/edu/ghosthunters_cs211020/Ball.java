@@ -63,15 +63,15 @@ public class Ball extends Entity{
         yPosition += (int) yS;
 
         // Creates the bouncing effect if the ball touches a side.
-        if (xPosition > xMax) {
-            xPosition = xMax;
+        if (xPosition + hitBox.width() > xMax) {
+            xPosition = xMax - hitBox.width();
             xVelocity = -(xVelocity * bounceFactor);
         } else if (xPosition < 0) {
             xPosition = 0;
             xVelocity = -(xVelocity * bounceFactor);
         }
-        if (yPosition > yMax) {
-            yPosition = yMax;
+        if (yPosition + hitBox.height() > yMax) {
+            yPosition = yMax - hitBox.height();
             yVelocity = -(yVelocity * bounceFactor);
         } else if (yPosition < 0) {
             yPosition = 0;
@@ -81,7 +81,7 @@ public class Ball extends Entity{
         // MAKE SURE TO ALWAYS UPDATE THE HITBOX AND CENTRAL POINT AFTER MOVING FOR EACH ENTITY!!!
         hitBoxUpdate();
         centralPointUpdate();
-        handleCollisions(main.getEntityList());
+        handleCollisions();
     }
 
     public void destroyer() {
@@ -93,9 +93,9 @@ public class Ball extends Entity{
         return paint.getColorFilter().equals(cFilter);
     }
 
-    public void handleCollisions(ArrayList<Entity> entityArrayList) {
+    public void handleCollisions() {
         ArrayList<Entity> collisionArrayList = new ArrayList<>();
-        collisionArrayList.addAll(collisionDetect(entityArrayList));
+        collisionArrayList.addAll(collisionDetect(main.getEntityList()));
 
         for (Entity e : collisionArrayList) {
             if (e instanceof Ghost && isCharged) {
