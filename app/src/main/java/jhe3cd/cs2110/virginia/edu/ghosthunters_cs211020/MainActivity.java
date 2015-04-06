@@ -53,6 +53,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public Paint chargerPaint;
     public Paint chargerBGPaint;
     public Paint genericPaint;
+    public Paint wordPaint;
 
     public ColorFilter cFilter;
 
@@ -92,11 +93,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         chargerBGPaint = new Paint();
         ballPaint = new Paint();
 
+        wordPaint = new Paint();
+
         cFilter = new LightingColorFilter(Color.YELLOW, 1);
 
         chargerPaint.setARGB(255, 255, 0, 0);
         chargerBGPaint.setARGB(200, 0, 0, 0);
         bgPaint.setARGB(255, 100, 100, 100);
+        wordPaint.setARGB(255, 0, 0, 0);
+        wordPaint.setTextSize(50);
 
         createEntities();
 
@@ -243,7 +248,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             canvas.drawRect(initChargerX - 10, 40, initChargerX + 410, 110, chargerBGPaint);
             canvas.drawRect(initChargerX, 50, chargerX, 100, chargerPaint);
             // canvas.drawBitmap(ballBMP, ball.getxPosition(), ball.getyPosition(), ballPaint);
-            canvas.drawText("" + score, xMax - 50, yMax - 50, genericPaint);
+            canvas.drawText("Score: " + score, xMax - 150, yMax - 150, wordPaint);
             for (Entity e : entityList) {
                 e.draw(canvas, getResources(), genericPaint);
             }
