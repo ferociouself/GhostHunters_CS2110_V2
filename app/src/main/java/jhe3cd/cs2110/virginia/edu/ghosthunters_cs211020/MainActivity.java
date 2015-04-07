@@ -1,17 +1,13 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.ShapeDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -19,13 +15,9 @@ import android.hardware.SensorManager;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import java.util.*;
 
@@ -41,6 +33,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public Point size;
 
+    public Ball ball;
+
     public int initChargerX = 100;
     public int chargerX = initChargerX + 10;
     public static final int CHARGER_DECAY_RATE = 3;
@@ -48,16 +42,20 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public int miniChargerCounter = 0;
     // Keeps track of the ticks.
 
+    public int initHealthX;
+    public int healthX;
+
     public Paint bgPaint;
     public Paint ballPaint;
     public Paint chargerPaint;
-    public Paint chargerBGPaint;
+    public Paint barBGPaint;
     public Paint genericPaint;
     public Paint wordPaint;
+    public Paint healthPaint;
 
     public ColorFilter cFilter;
 
-    public Ball ball;
+
 
     public static final int BALL_WIDTH = 40;
     public static final int BALL_HEIGHT = 40;
@@ -87,21 +85,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         xMax = (int)(size.x * 0.92);
         yMax = (int)(size.y * 0.73);
 
-        genericPaint = new Paint();
-        bgPaint = new Paint();
-        chargerPaint = new Paint();
-        chargerBGPaint = new Paint();
-        ballPaint = new Paint();
+        initHealthX = xMax - 400;
 
-        wordPaint = new Paint();
-
-        cFilter = new LightingColorFilter(Color.YELLOW, 1);
-
-        chargerPaint.setARGB(255, 255, 0, 0);
-        chargerBGPaint.setARGB(200, 0, 0, 0);
-        bgPaint.setARGB(255, 100, 100, 100);
-        wordPaint.setARGB(255, 0, 0, 0);
-        wordPaint.setTextSize(50);
+        setPaints();
 
         createEntities();
 
@@ -109,12 +95,34 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         setContentView(customDrawView);
     }
 
+    public void setPaints() {
+        genericPaint = new Paint();
+        bgPaint = new Paint();
+        chargerPaint = new Paint();
+        barBGPaint = new Paint();
+        ballPaint = new Paint();
+
+        wordPaint = new Paint();
+        healthPaint = new Paint();
+
+        cFilter = new LightingColorFilter(Color.YELLOW, 1);
+
+        chargerPaint.setARGB(255, 0, 255, 255);
+        barBGPaint.setARGB(200, 0, 0, 0);
+        bgPaint.setARGB(255, 100, 100, 100);
+        wordPaint.setARGB(255, 0, 0, 0);
+        wordPaint.setTextSize(50);
+        healthPaint.setARGB(255, 255, 0, 0);
+    }
+
     public boolean createEntities(){
         boolean worked = false;
         boolean forWorked = false;
 
         ball = new Ball(R.drawable.ball, xMax/2, yMax/2, 1, xMax, yMax, BALL_WIDTH, BALL_HEIGHT,
-                0.9f, this);
+                0.9f, 300, this);
+        healthX = initHealthX + ball.getMaxHealth();
+
         worked = entityList.add(ball);
 
         for (int i = 0; i < numGhostsSpawned; i++) {
@@ -174,6 +182,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             entityList.remove(e);
         }
         entitiesRemoved.clear();
+        healthX = initHealthX + ball.getHealth();
     }
 
     public int incScore(int scoreIncrease) {
@@ -245,9 +254,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             newThread.chargerSensor();
             newThread.toucherSensor();
             canvas.drawRect(0, 0, size.x, size.y, bgPaint);
-            canvas.drawRect(initChargerX - 10, 40, initChargerX + 410, 110, chargerBGPaint);
+            canvas.drawRect(initChargerX - 10, 40, initChargerX + 410, 110, barBGPaint);
             canvas.drawRect(initChargerX, 50, chargerX, 100, chargerPaint);
-            // canvas.drawBitmap(ballBMP, ball.getxPosition(), ball.getyPosition(), ballPaint);
+            canvas.drawRect(initHealthX - 10, 40, initHealthX + ball.getMaxHealth() + 10, 110, barBGPaint);
+            canvas.drawRect(initHealthX, 50, healthX, 100, healthPaint);
             canvas.drawText("Score: " + score, xMax - 150, yMax - 150, wordPaint);
             for (Entity e : entityList) {
                 e.draw(canvas, getResources(), genericPaint);

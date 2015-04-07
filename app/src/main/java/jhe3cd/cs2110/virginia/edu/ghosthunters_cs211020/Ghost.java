@@ -106,6 +106,10 @@ public class Ghost extends Entity{
             if (e instanceof Ghost) {
                 isColliding = true;
             }
+            if (e instanceof Ball) {
+                main.getBall().incHealth(-30);
+                destroyer();
+            }
         }
         isColliding = collisionArrayList.size() > 1;
     }

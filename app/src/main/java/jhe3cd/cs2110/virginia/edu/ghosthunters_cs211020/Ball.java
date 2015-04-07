@@ -10,28 +10,33 @@ import java.util.ArrayList;
  * Created by JacksonEkis on 3/30/15.
  */
 public class Ball extends Entity{
-    public float xVelocity, xAcceleration = 0.0f;
-    public float yVelocity, yAcceleration = 0.0f;
-    public float bounceFactor;
+    private float xVelocity, xAcceleration = 0.0f;
+    private float yVelocity, yAcceleration = 0.0f;
+    private float bounceFactor;
 
-    public float speedMod;
+    private float speedMod;
     public static float origSpeedMod;
 
     public boolean isTouching;
     public boolean isCharged;
 
-    public int fileID;
+    private int fileID;
 
     private Paint paint;
 
+    private int health;
+    private int maxHealth;
+
     public Ball (int fileID, int xPosition, int yPosition, float speedMod,
                  int xMax, int yMax, int hitBoxWidth, int hitBoxHeight, float bounceFactor,
-                 MainActivity main) {
+                 int health, MainActivity main) {
         super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
         this.speedMod = speedMod;
         origSpeedMod = speedMod;
         paint = new Paint();
         this.bounceFactor = bounceFactor;
+        this.health = health;
+        this.maxHealth = health;
     }
 
     public void updateAcceleration (float xAcceleration, float yAcceleration){
@@ -106,6 +111,10 @@ public class Ball extends Entity{
         }
     }
 
+    public void incHealth(int added) {
+        health += added;
+    }
+
     public void toggleTouching() {
         isTouching = !isTouching;
     }
@@ -144,5 +153,13 @@ public class Ball extends Entity{
 
     public Paint getPaint() {
         return paint;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
     }
 }
