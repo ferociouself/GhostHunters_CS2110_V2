@@ -248,7 +248,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             canvas.drawRect(initChargerX - 10, 40, initChargerX + 410, 110, chargerBGPaint);
             canvas.drawRect(initChargerX, 50, chargerX, 100, chargerPaint);
             // canvas.drawBitmap(ballBMP, ball.getxPosition(), ball.getyPosition(), ballPaint);
-            canvas.drawText("Score: " + score, xMax - 150, yMax - 150, wordPaint);
+            canvas.drawText("Score: " + score, xMax - 150, yMax - 100, wordPaint);
             for (Entity e : entityList) {
                 e.draw(canvas, getResources(), genericPaint);
             }

@@ -10,7 +10,7 @@ public abstract class Item extends Entity
     public abstract void activate();
     public abstract void terminate();
 
-    public Item(int duration, int fileID, int xPosition, int yPosition, int xMax, int yMax,
+    public Item(double duration, int fileID, int xPosition, int yPosition, int xMax, int yMax,
                 int hitBoxWidth, int hitBoxHeight, MainActivity main)
     {
         super(fileID,xPosition, yPosition, xMax, yMax,hitBoxWidth,hitBoxHeight, main);
