@@ -25,6 +25,8 @@ public abstract class Entity {
 
     protected MainActivity main;
 
+    Bitmap bmp;
+
     public Entity(int fileID, int xPosition, int yPosition, int xMax, int yMax,
                   int hitBoxWidth, int hitBoxHeight, MainActivity main) {
         this.fileID = fileID;
@@ -35,6 +37,7 @@ public abstract class Entity {
         this.centralPoint = new Point(xPosition + (hitBoxWidth/2), yPosition + (hitBoxHeight/2));
         this.hitBox = new Rect(xPosition, yPosition, xPosition + hitBoxWidth, yPosition + hitBoxHeight);
         this.main = main;
+        bmp = decodeSampledBitmapFromResource(main.getResources(), fileID, hitBox.width(), hitBox.height());
     }
 
     public abstract void update();
@@ -60,8 +63,7 @@ public abstract class Entity {
         return collisionArrayList;
     }
 
-    public void draw(Canvas canvas, Resources res, Paint paint) {
-        Bitmap bmp = decodeSampledBitmapFromResource(res, fileID, hitBox.width(), hitBox.height());
+    public void draw(Canvas canvas, Paint paint) {
         canvas.drawBitmap(bmp, xPosition, yPosition, paint);
     }
 

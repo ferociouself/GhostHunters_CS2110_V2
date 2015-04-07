@@ -91,6 +91,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         createEntities();
 
+        score = 0;
+
         customDrawView = new CustomDrawableView(this);
         setContentView(customDrawView);
     }
@@ -258,9 +260,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             canvas.drawRect(initChargerX, 50, chargerX, 100, chargerPaint);
             canvas.drawRect(initHealthX - 10, 40, initHealthX + ball.getMaxHealth() + 10, 110, barBGPaint);
             canvas.drawRect(initHealthX, 50, healthX, 100, healthPaint);
-            canvas.drawText("Score: " + score, xMax - 150, yMax - 150, wordPaint);
+            canvas.drawText("Score: " + score, xMax - 150, yMax - 50, wordPaint);
             for (Entity e : entityList) {
-                e.draw(canvas, getResources(), genericPaint);
+                e.draw(canvas, genericPaint);
             }
             invalidate();
         }

@@ -1,5 +1,7 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
+import android.content.res.Resources;
+
 /**
  * Created by liamj_000 on 4/6/2015.
  */
