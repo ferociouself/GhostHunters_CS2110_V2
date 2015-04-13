@@ -24,7 +24,7 @@ public class Ghost extends Entity{
 
     private boolean ballTouching;
     private boolean ballCharged;
-
+    private boolean frozen;
     private float bounceFactor = 0.0f;
 
     private boolean isColliding = false;
@@ -44,6 +44,7 @@ public class Ghost extends Entity{
         this.isVisible = false;
         this.ballTouching = false;
         this.ballCharged = false;
+        this.frozen = false;
         this.main = main;
     }
 
@@ -52,7 +53,7 @@ public class Ghost extends Entity{
         ballTouching = main.getBall().isTouching();
         ballCharged = main.getBall().isCharged();
         handleCollisions();
-        if(ballTouching && !ballCharged) {
+        if(ballTouching && !ballCharged && !frozen) {
             if (isColliding) {
                 xDynAcceleration = -((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
                 yDynAcceleration = -((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
@@ -105,22 +106,47 @@ public class Ghost extends Entity{
         main.entityRemove(this);
     }
 
-    public void handleCollisions() {
+    public void handleCollisions()
+    {
         ArrayList<Entity> collisionArrayList = new ArrayList<>();
         collisionArrayList.addAll(collisionDetect(main.getEntityList()));
-        for (Entity e : collisionArrayList) {
-            if (e instanceof Ghost) {
+        for (Entity e : collisionArrayList)
+        {
+            if (e instanceof Ghost)
+            {
                 isColliding = true;
             }
-            if (e instanceof Ball) {
-                main.getBall().incHealth(-30);
-                destroyer(DESTROYER_ID);
+            if (e instanceof Ball)
+            {
+                Ball it = (Ball)e;
+
+                String id = it.getItemStored().getItemID();
+
+                switch(id)
+                {
+                    case "shield":
+                        break;
+
+                    case "extraHealth":
+                        main.getBall().incHealth(30);
+                        break;
+
+                    case "timeFreezer":
+                        frozen=true;
+                        break;
+
+                    default:
+                        main.getBall().incHealth(-30);
+                        destroyer(DESTROYER_ID);
+                        break;
+                }
             }
         }
         isColliding = collisionArrayList.size() > 1;
     }
 
-    public void randomlyGenerate() {
+    public void randomlyGenerate()
+    {
         xPosition = (int) (Math.random() * xMax);
         yPosition = (int) (Math.random() * yMax);
     }

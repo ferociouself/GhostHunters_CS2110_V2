@@ -46,4 +46,12 @@ public class Item extends Entity
         main.entityRemove(this);
     }
 
+    // Getter
+    public String getItemID()
+    {
+        return itemID;
+    }
+
+
+
 }
