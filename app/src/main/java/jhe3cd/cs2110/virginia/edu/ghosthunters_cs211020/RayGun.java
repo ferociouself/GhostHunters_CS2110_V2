@@ -10,12 +10,13 @@ import android.view.MotionEvent;
  */
 public class RayGun extends Item {
 
+    public static final String ITEM_ID = "RayGun";
     private Ray ray;
     private boolean isTouching;
 
     public RayGun(double duration, int fileID, int xPosition, int yPosition, int xMax, int yMax,
                   int hitBoxWidth, int hitBoxHeight, MainActivity main, Ray ray) {
-        super(duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
+        super(ITEM_ID, duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
         this.ray = ray;
     }
 

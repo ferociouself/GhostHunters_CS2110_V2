@@ -7,7 +7,7 @@ public class Shield extends Item
 {
     public Shield (int duration, int fileID, int xPosition, int yPosition, int xMax, int yMax,
                    int hitBoxWidth, int hitBoxHeight, MainActivity main) {
-        super (duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
+        super ("Shield", duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
     }
 
     public void activate()

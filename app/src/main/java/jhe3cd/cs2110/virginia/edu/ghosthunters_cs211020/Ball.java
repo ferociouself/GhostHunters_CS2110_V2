@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Created by JacksonEkis on 3/30/15.
  */
 public class Ball extends Entity{
-    private static final String DESTROYER_ID = "ball";
+    public static final String DESTROYER_ID = "ball";
     private float xVelocity, xAcceleration = 0.0f;
     private float yVelocity, yAcceleration = 0.0f;
     private float bounceFactor;
@@ -27,6 +27,8 @@ public class Ball extends Entity{
 
     private int health;
     private int maxHealth;
+
+    private Item itemStored;
 
     public Ball (int fileID, int xPosition, int yPosition, float speedMod,
                  int xMax, int yMax, int hitBoxWidth, int hitBoxHeight, float bounceFactor,
@@ -162,5 +164,13 @@ public class Ball extends Entity{
 
     public int getMaxHealth() {
         return maxHealth;
+    }
+
+    public Item getItemStored() {
+        return itemStored;
+    }
+
+    public void setItemStored(Item itemStored) {
+        this.itemStored = itemStored;
     }
 }
