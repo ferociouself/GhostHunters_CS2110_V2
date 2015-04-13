@@ -106,7 +106,7 @@ public abstract class Entity {
         return BitmapFactory.decodeResource(res, resId, options);
     }
 
-    public abstract void destroyer();
+    public abstract void destroyer(String destroyer);
 
     public int getxPosition() {
         return xPosition;

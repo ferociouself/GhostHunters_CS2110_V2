@@ -89,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         setPaints();
 
-        createEntities();
+        createInitialEntities();
 
         score = 0;
 
@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         healthPaint.setARGB(255, 255, 0, 0);
     }
 
-    public boolean createEntities(){
+    public boolean createInitialEntities(){
         boolean worked = false;
         boolean forWorked = false;
 
@@ -136,6 +136,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
 
         return worked && forWorked;
+    }
+
+    public void createNewEntity(Entity e) {
+        entityList.add(e);
     }
 
     @Override

@@ -1,17 +1,15 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
-import android.content.res.Resources;
 import android.graphics.Point;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * Created by JacksonEkis on 3/30/15.
  */
 public class Ghost extends Entity{
+
+    private static final String DESTROYER_ID = "ghost";
 
     private float xVelocity;
     private float yVelocity;
@@ -53,6 +51,7 @@ public class Ghost extends Entity{
         target.set(main.getBall().getxPosition(), main.getBall().getyPosition());
         ballTouching = main.getBall().isTouching();
         ballCharged = main.getBall().isCharged();
+        handleCollisions();
         if(ballTouching && !ballCharged) {
             if (isColliding) {
                 xDynAcceleration = -((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
@@ -69,7 +68,7 @@ public class Ghost extends Entity{
             xVelocity = xVelocity * 0.90f;
             yVelocity = yVelocity * 0.95f;
         }
-        handleCollisions();
+
 
         //Calc distance travelled in that time
         float xS = (xVelocity/2)*MainActivity.FRAME_TIME;
@@ -96,7 +95,13 @@ public class Ghost extends Entity{
         centralPointUpdate();
     }
 
-    public void destroyer() {
+    public void destroyer(String destroyer) {
+        int ran1 = (int) (Math.random() * 100);
+        if (destroyer.equals("ball") && ran1 > 90) {
+            main.createNewEntity(new FriendlyGhost(xPosition, yPosition, R.drawable.friendlyGhost,
+                    null, null, 10, hitBox.width(), hitBox.height(), xMax, yMax, xOrigAcceleration,
+                    yOrigAcceleration, bounceFactor, 8, main));
+        }
         main.entityRemove(this);
     }
 
@@ -109,7 +114,7 @@ public class Ghost extends Entity{
             }
             if (e instanceof Ball) {
                 main.getBall().incHealth(-30);
-                destroyer();
+                destroyer(DESTROYER_ID);
             }
         }
         isColliding = collisionArrayList.size() > 1;

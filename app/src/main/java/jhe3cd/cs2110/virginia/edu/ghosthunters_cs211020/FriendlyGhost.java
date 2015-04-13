@@ -1,15 +1,15 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
-import android.content.res.Resources;
 import android.graphics.Point;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Created by liamj_000 on 4/4/2015.
  */
 public class FriendlyGhost extends Ghost{
+
+    private static final String DESTROYER_ID = "friendlyGhost";
 
     private boolean isFriendly;
     int lifeSpan;
@@ -30,19 +30,20 @@ public class FriendlyGhost extends Ghost{
         float smallestDist = distances.get(0);*/
 
         setTarget(findNearestGhostCenter());
-
+        super.update();
 //        this.setTarget();
         for(Entity e : this.collisionDetect(main.getEntityList())) {
             if(e instanceof Ghost) {
-                e.destroyer();
+                e.destroyer(DESTROYER_ID);
             }
         }
         timeActive++;
         if (timeActive > lifeSpan * 1000) {
-            destroyer();
+            destroyer(DESTROYER_ID);
         }
     }
 
+    @Deprecated
     public ArrayList<Float> distanceBetweenGhosts() {
         ArrayList<Float> distances = new ArrayList<Float>();
         Point p1 = this.getCentralPoint();
@@ -99,7 +100,7 @@ public class FriendlyGhost extends Ghost{
         return currPoint;
     }
 
-    public void destroyer() {
+    public void destroyer(String destroyer) {
         main.entityRemove(this);
     }
 }

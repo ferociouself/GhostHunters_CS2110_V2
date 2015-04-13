@@ -1,6 +1,5 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
-import android.content.res.Resources;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.util.Log;
@@ -11,6 +10,7 @@ import java.util.ArrayList;
  * Created by JacksonEkis on 3/30/15.
  */
 public class Ball extends Entity{
+    private static final String DESTROYER_ID = "ball";
     private float xVelocity, xAcceleration = 0.0f;
     private float yVelocity, yAcceleration = 0.0f;
     private float bounceFactor;
@@ -90,7 +90,7 @@ public class Ball extends Entity{
         handleCollisions();
     }
 
-    public void destroyer() {
+    public void destroyer(String destroyer) {
         main.entityRemove(this);
     }
 
@@ -106,7 +106,7 @@ public class Ball extends Entity{
         for (Entity e : collisionArrayList) {
             if (e instanceof Ghost && isCharged) {
                 Log.i("BALL", "Ghost collided with");
-                e.destroyer();
+                e.destroyer(DESTROYER_ID);
                 main.incScore(100);
             }
         }
