@@ -98,7 +98,7 @@ public class Ghost extends Entity{
     public void destroyer(String destroyer) {
         int ran1 = (int) (Math.random() * 100);
         if (destroyer.equals("ball") && ran1 > 90) {
-            main.createNewEntity(new FriendlyGhost(xPosition, yPosition, R.drawable.friendlyGhost,
+            main.createNewEntity(new FriendlyGhost(xPosition, yPosition, R.drawable.friendly_ghost,
                     null, null, 10, hitBox.width(), hitBox.height(), xMax, yMax, xOrigAcceleration,
                     yOrigAcceleration, bounceFactor, 8, main));
         }

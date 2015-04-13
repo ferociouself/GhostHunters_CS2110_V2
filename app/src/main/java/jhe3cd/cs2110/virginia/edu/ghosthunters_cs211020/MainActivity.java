@@ -82,8 +82,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-        xMax = (int)(size.x * 0.92);
-        yMax = (int)(size.y * 0.73);
+        xMax = (int) (size.x * 0.97);
+        yMax = (int)(size.y * 0.88);
 
         initHealthX = xMax - 400;
 
@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         healthPaint.setARGB(255, 255, 0, 0);
     }
 
-    public boolean createInitialEntities(){
+    public boolean createInitialEntities() {
         boolean worked = false;
         boolean forWorked = false;
 
