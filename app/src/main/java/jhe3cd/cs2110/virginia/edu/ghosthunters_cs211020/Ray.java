@@ -1,36 +1,52 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
+import android.graphics.Point;
+import android.util.Log;
+
+import java.util.ArrayList;
+
 /**
  * Created by liamj_000 on 4/6/2015.
  */
 public class Ray extends Entity {
 
+    private static final String DESTROYER_ID = "ray";
     private float xVelocity;
     private float yVelocity;
     private float xAcceleration;
     private float yAcceleration;
+    private Point target;
 
     public Ray(int fileID, int xPosition, int yPosition, int xMax, int yMax,
-               int hitBoxWidth, int hitBoxHeight, MainActivity main, float xVelocity,
-               float yVelocity, float xAcceleration, float yAcceleration) {
+               int hitBoxWidth, int hitBoxHeight, MainActivity main, Point target) {
         super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
-        this.xVelocity = xVelocity;
-        this.yVelocity = yVelocity;
-        this.xAcceleration = xAcceleration;
-        this.yAcceleration = yAcceleration;
+        this.target = target;
+        this.xVelocity = target.x - main.getBall().getCentralPoint().x;
+        this.yVelocity = target.y - main.getBall().getCentralPoint().y;
     }
 
     public void update() {
-        xVelocity += xAcceleration * main.FRAME_TIME;
-        yVelocity += yAcceleration * main.FRAME_TIME;
-        xPosition += xVelocity;
-        yPosition += yVelocity;
+        xPosition += xVelocity * main.FRAME_TIME;
+        yPosition += yVelocity * main.FRAME_TIME;
         this.hitBoxUpdate();
         this.centralPointUpdate();
+        this.handleCollisions();
+    }
+
+    public void handleCollisions() {
+        ArrayList<Entity> collisionArrayList = new ArrayList<>();
+        collisionArrayList.addAll(collisionDetect(main.getEntityList()));
+
+        for (Entity e : collisionArrayList) {
+            if (e instanceof Ghost) {
+                Log.i("Ray", "Ghost collided with");
+                e.destroyer(DESTROYER_ID);
+            }
+        }
     }
 
    public void destroyer(String destroyer) {
-
+        main.entityRemove(this);
    }
 
    public void eliminate() {
@@ -39,6 +55,7 @@ public class Ray extends Entity {
                main.getEntityList().remove(e);
            }
        }
+       this.destroyer(this.DESTROYER_ID);
    }
 
 }

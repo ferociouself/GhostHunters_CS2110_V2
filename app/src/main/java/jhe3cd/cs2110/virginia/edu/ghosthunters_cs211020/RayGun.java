@@ -15,6 +15,11 @@ public class RayGun extends Item {
         super(duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
         this.ray = ray;
     }
+
+    public void update() {
+        // If onTouchEvent then create a new ray, set it's target to the coordinates of the touch, and update it.
+    }
+
     public void activate() {
 
     }
