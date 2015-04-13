@@ -21,9 +21,9 @@ public class RayGun extends Item {
 
     public void updateTouch(float xPos, float yPos) {
         Point target = new Point((int) xPos, (int) yPos);
-//        Ray ray1 = new Ray(R.drawable.ray, this.getCentralPoint().x, this.getCentralPoint().y, this.xMax, this.yMax,
-//               10, 10, main, target);
-//        ray1.update();
+        Ray ray1 = new Ray(R.drawable.flash_light, this.getCentralPoint().x, this.getCentralPoint().y, this.xMax, this.yMax,
+               10, 10, main, target);
+        ray1.update();
         // If onTouchEvent then create a new ray, set it's target to the coordinates of the touch, and update it.
         }
 
