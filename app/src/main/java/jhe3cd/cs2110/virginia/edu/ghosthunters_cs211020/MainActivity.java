@@ -117,6 +117,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         healthPaint.setARGB(255, 255, 0, 0);
     }
 
+    public void createItemMap() {
+        // TODO Create the item map!
+    }
+
     public boolean createInitialEntities() {
         boolean worked = false;
         boolean forWorked = false;
@@ -140,6 +144,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public void createNewEntity(Entity e) {
         entityList.add(e);
+    }
+
+    public Item getRandomItem() {
+        // TODO Add ability to get random items from a list of items.
+        return null;
     }
 
     @Override
