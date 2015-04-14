@@ -13,8 +13,6 @@ public class Ray extends Entity {
     private static final String DESTROYER_ID = "ray";
     private float xVelocity;
     private float yVelocity;
-    private float xAcceleration;
-    private float yAcceleration;
     private Point target;
 
     public Ray(int fileID, int xPosition, int yPosition, int xMax, int yMax,
@@ -31,6 +29,12 @@ public class Ray extends Entity {
         this.hitBoxUpdate();
         this.centralPointUpdate();
         this.handleCollisions();
+        if(this.xPosition > xMax) {
+            this.destroyer(this.DESTROYER_ID);
+        }
+        if(this.yPosition > yMax) {
+            this.destroyer(this.DESTROYER_ID);
+        }
     }
 
     public void handleCollisions() {
@@ -57,5 +61,4 @@ public class Ray extends Entity {
        }
        this.destroyer(this.DESTROYER_ID);
    }
-
 }

@@ -21,6 +21,12 @@ import android.view.View;
 import android.view.WindowManager;
 import java.util.*;
 
+/**
+ * Jackson Ekis: jhe3cd
+ * Liam Dwyer: ljd3za
+ * Matthew Thornton: mpt5nm
+ *
+ */
 
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
 
@@ -63,10 +69,17 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public ArrayList<Entity> entityList = new ArrayList<>();
     public ArrayList<Entity> entitiesRemoved = new ArrayList<>();
 
+    public HashMap<String, Item> itemMap = new HashMap<>();
+
     public int numGhostsSpawned = 4;
+    public int numGhostsActive = 4;
     public int score;
 
+    public int timeCounter = 0;
+
     public static int difficulty;
+
+    public static final String SHIELD_ID = "shield";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,10 +130,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         healthPaint.setARGB(255, 255, 0, 0);
     }
 
-    public void createItemMap() {
-        // TODO Create the item map!
-    }
-
     public boolean createInitialEntities() {
         boolean worked = false;
         boolean forWorked = false;
@@ -142,8 +151,22 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         return worked && forWorked;
     }
 
+    public void spawnNewGhosts() {
+        for (int i = 0; i < numGhostsSpawned; i++) {
+            Ghost tempGh= new Ghost(0, 0, R.drawable.ghost, ball.getCentralPoint(), null, 1, 32,
+                    38, xMax, yMax, 5.0f, 5.0f, 0.9f, this);
+            tempGh.randomlyGenerate();
+            createNewEntity(tempGh);
+            numGhostsActive++;
+        }
+    }
+
     public void createNewEntity(Entity e) {
         entityList.add(e);
+    }
+
+    public void reduceNumGhostsActive(int i) {
+        numGhostsActive -= i;
     }
 
     public Item getRandomItem() {
@@ -159,6 +182,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             ball.toggleTouching();
         } else if (action == MotionEvent.ACTION_UP) {
             ball.toggleTouching();
+        }
+        if(this.getBall().getItemStored().getItemID().equals("RayGun")) {
+            RayGun rayGun = (RayGun) this.getBall().getItemStored();
+            rayGun.updateTouch(event.getX(), event.getY());
         }
 
         return true;
@@ -198,6 +225,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
         entitiesRemoved.clear();
         healthX = initHealthX + ball.getHealth();
+        if (timeCounter == 500) {
+            spawnNewGhosts();
+            timeCounter = 0;
+        } else {
+            timeCounter++;
+        }
     }
 
     public int incScore(int scoreIncrease) {
