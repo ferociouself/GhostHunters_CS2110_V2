@@ -15,27 +15,32 @@ public class RayGun extends Item {
     private boolean isTouching;
 
     public RayGun(double duration, int fileID, int xPosition, int yPosition, int xMax, int yMax,
-                  int hitBoxWidth, int hitBoxHeight, MainActivity main, Ray ray) {
+                  int hitBoxWidth, int hitBoxHeight, MainActivity main) {
         super(ITEM_ID, duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
-        this.ray = ray;
     }
 
     public void updateTouch(float xPos, float yPos) {
         Point target = new Point((int) xPos, (int) yPos);
-        Ray ray1 = new Ray(R.drawable.flash_light, this.getCentralPoint().x, this.getCentralPoint().y, this.xMax, this.yMax,
-               10, 10, main, target);
-        ray1.update();
-        // If onTouchEvent then create a new ray, set it's target to the coordinates of the touch, and update it.
+        main.createNewEntity(new Ray(R.drawable.ray, this.getCentralPoint().x, this.getCentralPoint().y, this.xMax, this.yMax,
+                25, 25, main, target));
+
         }
 
-
+    public void update() {
+        if(this.ray != null) {
+            ray.update();
+        }
+        this.duration -= main.FRAME_TIME;
+    }
 
     public void activate() {
-
+        main.getBall().setItemStored(this);
+        super.activate();
     }
 
     public void terminate() {
-
+        if(this.duration == 0) {
+            main.entityRemove(this);
+        }
     }
-
 }
