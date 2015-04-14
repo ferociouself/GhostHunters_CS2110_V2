@@ -103,6 +103,7 @@ public class Ghost extends Entity{
                     null, null, 10, hitBox.width(), hitBox.height(), xMax, yMax, xOrigAcceleration,
                     yOrigAcceleration, bounceFactor, 8, main));
         }
+        main.reduceNumGhostsActive(1);
         main.entityRemove(this);
     }
 
@@ -120,26 +121,31 @@ public class Ghost extends Entity{
             {
                 Ball it = (Ball)e;
 
-                String id = it.getItemStored().getItemID();
+                if (it.getItemStored() != null) {
+                    String id = it.getItemStored().getItemID();
 
-                switch(id)
-                {
-                    case "shield":
-                        break;
 
-                    case "extraHealth":
-                        main.getBall().incHealth(30);
-                        break;
+                    switch (id) {
+                        case "shield":
+                            break;
 
-                    case "timeFreezer":
-                        frozen=true;
-                        break;
+                        case "extraHealth":
+                            main.getBall().incHealth(30);
+                            break;
 
-                    default:
-                        main.getBall().incHealth(-30);
-                        destroyer(DESTROYER_ID);
-                        break;
+                        case "timeFreezer":
+                            frozen = true;
+                            break;
+
+                        default:
+                            main.getBall().incHealth(-30);
+                            destroyer(DESTROYER_ID);
+                            break;
+                    }
                 }
+                main.getBall().incHealth(-30);
+                destroyer(DESTROYER_ID);
+                break;
             }
         }
         isColliding = collisionArrayList.size() > 1;
