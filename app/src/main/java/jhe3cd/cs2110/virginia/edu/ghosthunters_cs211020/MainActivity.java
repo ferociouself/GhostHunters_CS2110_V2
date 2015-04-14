@@ -63,10 +63,14 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public ArrayList<Entity> entityList = new ArrayList<>();
     public ArrayList<Entity> entitiesRemoved = new ArrayList<>();
 
+    public HashMap<String, Item> itemMap = new HashMap<>();
+
     public int numGhostsSpawned = 4;
     public int score;
 
     public static int difficulty;
+
+    public static final String SHIELD_ID = "shield";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +119,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         wordPaint.setARGB(255, 0, 0, 0);
         wordPaint.setTextSize(50);
         healthPaint.setARGB(255, 255, 0, 0);
-    }
-
-    public void createItemMap() {
-        // TODO Create the item map!
     }
 
     public boolean createInitialEntities() {
