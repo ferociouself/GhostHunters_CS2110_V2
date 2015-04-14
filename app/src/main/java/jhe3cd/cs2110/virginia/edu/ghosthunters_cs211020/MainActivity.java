@@ -160,6 +160,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         } else if (action == MotionEvent.ACTION_UP) {
             ball.toggleTouching();
         }
+        if(this.getBall().getItemStored().getItemID().equals("RayGun")) {
+            RayGun rayGun = (RayGun) this.getBall().getItemStored();
+            rayGun.updateTouch(event.getX(), event.getY());
+        }
 
         return true;
     }
