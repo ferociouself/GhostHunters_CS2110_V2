@@ -15,13 +15,14 @@ public class FriendlyGhost extends Ghost{
     int lifeSpan;
     long timeActive;
 
-    public FriendlyGhost(int xPosition, int yPosition, int fileID, Point target, Item booty, int health,
+    public FriendlyGhost(int xPosition, int yPosition, int fileID, int health,
                          int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration,
                          float yAcceleration, float bounceFactor, int lifeSpan, MainActivity main) {
-        super(xPosition, yPosition, fileID, target, booty, health, hitBoxWidth, hitBoxHeight, xMax,
+        super(xPosition, yPosition, fileID, null, null, health, hitBoxWidth, hitBoxHeight, xMax,
                 yMax, xAcceleration, yAcceleration, bounceFactor, main);
         this.isFriendly = true;
         this.lifeSpan = lifeSpan;
+        setTarget(findNearestGhostCenter());
     }
 
     public void update() {
