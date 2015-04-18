@@ -186,6 +186,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         if(this.getBall().getItemStored().getItemID().equals("RayGun")) {
             RayGun rayGun = (RayGun) this.getBall().getItemStored();
             rayGun.updateTouch(event.getX(), event.getY());
+            rayGun.update();
         }
 
         return true;

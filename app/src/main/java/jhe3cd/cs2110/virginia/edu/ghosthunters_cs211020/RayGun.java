@@ -21,9 +21,8 @@ public class RayGun extends Item {
 
     public void updateTouch(float xPos, float yPos) {
         Point target = new Point((int) xPos, (int) yPos);
-        main.createNewEntity(new Ray(R.drawable.ray, this.getCentralPoint().x, this.getCentralPoint().y, this.xMax, this.yMax,
+        main.createNewEntity(new Ray(R.drawable.ray, main.getBall().getCentralPoint().x, main.getBall().getCentralPoint().y, this.xMax, this.yMax,
                 25, 25, main, target));
-
         }
 
     public void update() {
@@ -31,6 +30,7 @@ public class RayGun extends Item {
             ray.update();
         }
         this.duration -= main.FRAME_TIME;
+        this.terminate();
     }
 
     public void activate() {
@@ -39,7 +39,7 @@ public class RayGun extends Item {
     }
 
     public void terminate() {
-        if(this.duration == 0) {
+        if(this.duration <= 0) {
             main.entityRemove(this);
         }
     }
