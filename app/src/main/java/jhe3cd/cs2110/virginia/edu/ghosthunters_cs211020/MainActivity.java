@@ -1,6 +1,7 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
 import android.content.Context;
+import android.gesture.GestureOverlayView;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,7 +16,12 @@ import android.hardware.SensorManager;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,7 +34,7 @@ import java.util.*;
  *
  */
 
-public class MainActivity extends ActionBarActivity implements SensorEventListener {
+public class MainActivity extends ActionBarActivity implements SensorEventListener{
 
     CustomDrawableView customDrawView = null;
     public int xMax, yMax;
@@ -58,10 +64,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public Paint genericPaint;
     public Paint wordPaint;
     public Paint healthPaint;
+    public Paint pausedPaint;
+    public Paint pausedWordPaint;
 
     public ColorFilter cFilter;
 
-
+    public int doubleTapTimer = 0;
+    public boolean doubleTapTriggered = false;
 
     public static final int BALL_WIDTH = 40;
     public static final int BALL_HEIGHT = 40;
@@ -77,9 +86,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public int timeCounter = 0;
 
-    public static int difficulty;
+    public static int difficulty = 0;
 
     public static final String SHIELD_ID = "shield";
+
+    public boolean paused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +131,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         wordPaint = new Paint();
         healthPaint = new Paint();
 
+        pausedPaint = new Paint();
+        pausedWordPaint = new Paint();
+
         cFilter = new LightingColorFilter(Color.YELLOW, 1);
 
         chargerPaint.setARGB(255, 0, 255, 255);
@@ -128,17 +142,19 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         wordPaint.setARGB(255, 0, 0, 0);
         wordPaint.setTextSize(50);
         healthPaint.setARGB(255, 255, 0, 0);
+        pausedPaint.setARGB(100, 0, 0, 0);
+        pausedWordPaint.setARGB(255, 255, 255, 255);
+        pausedWordPaint.setTextSize(150.0f);
     }
 
     public boolean createInitialEntities() {
-        boolean worked = false;
         boolean forWorked = false;
 
         ball = new Ball(R.drawable.ball, xMax/2, yMax/2, 1, xMax, yMax, BALL_WIDTH, BALL_HEIGHT,
                 0.9f, 300, this);
         healthX = initHealthX + ball.getMaxHealth();
 
-        worked = entityList.add(ball);
+        boolean worked = entityList.add(ball);
 
         for (int i = 0; i < numGhostsSpawned; i++) {
             Ghost tempGh = new Ghost(0, 0, R.drawable.ghost, ball.getCentralPoint(), null, 1, 32,
@@ -178,15 +194,23 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public boolean onTouchEvent(MotionEvent event){
         int action = MotionEventCompat.getActionMasked(event);
 
-        if (action == MotionEvent.ACTION_DOWN) {
-            ball.toggleTouching();
+        if (doubleTapTriggered && action == MotionEvent.ACTION_DOWN) {
+            doubleTapTriggered = false;
+            paused = !paused;
+            doubleTapTimer = 0;
+        } else if (action == MotionEvent.ACTION_DOWN) {
+            ball.setTouching(true);
+            doubleTapTriggered = true;
+            doubleTapTimer = 30;
         } else if (action == MotionEvent.ACTION_UP) {
-            ball.toggleTouching();
+            ball.setTouching(false);
         }
-        if(this.getBall().getItemStored().getItemID().equals("RayGun")) {
-            RayGun rayGun = (RayGun) this.getBall().getItemStored();
-            rayGun.updateTouch(event.getX(), event.getY());
-            rayGun.update();
+
+        if(this.getBall().getItemStored() != null) {
+            if (this.getBall().getItemStored().getItemID().equals("RayGun")) {
+                RayGun rayGun = (RayGun) this.getBall().getItemStored();
+                rayGun.updateTouch(event.getX(), event.getY());
+            }
         }
 
         return true;
@@ -195,12 +219,16 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
+        paused = false;
+        Log.i("PauserResume" , "Paused: " + paused);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        paused = true;
+        Log.i("PauserPause" , "Paused: " + paused);
         sensorManager.unregisterListener(this);
     }
 
@@ -218,19 +246,27 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
     private void update() {
-        for (Entity e : entityList) {
-            e.update();
+        if (doubleTapTimer > 0) {
+            doubleTapTimer--;
         }
-        for (Entity e : entitiesRemoved) {
-            entityList.remove(e);
+        if (doubleTapTimer == 0) {
+            doubleTapTriggered = false;
         }
-        entitiesRemoved.clear();
-        healthX = initHealthX + ball.getHealth();
-        if (timeCounter == 500) {
-            spawnNewGhosts();
-            timeCounter = 0;
-        } else {
-            timeCounter++;
+        if (!paused) {
+            for (Entity e : entityList) {
+                e.update();
+            }
+            for (Entity e : entitiesRemoved) {
+                entityList.remove(e);
+            }
+            entitiesRemoved.clear();
+            healthX = initHealthX + ball.getHealth();
+            if (timeCounter == 500) {
+                spawnNewGhosts();
+                timeCounter = 0;
+            } else {
+                timeCounter++;
+            }
         }
     }
 
@@ -259,14 +295,14 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         difficulty = newDifficulty;
     }
 
-/*    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }*/
 
-    /*    @Override
+        /* @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             // Handle action bar item clicks here. The action bar will
             // automatically handle clicks on the Home/Up button, so long
@@ -279,7 +315,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             }
 
             return super.onOptionsItemSelected(item);
-        }*/
+        } */
     public class CustomDrawableView extends View {
         private Bitmap ballBMP;
 
@@ -298,18 +334,24 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
 
         protected void onDraw(Canvas canvas) {
-            ThreadTest newThread = new ThreadTest();
-            update();
-            newThread.chargerSensor();
-            newThread.toucherSensor();
-            canvas.drawRect(0, 0, size.x, size.y, bgPaint);
-            canvas.drawRect(initChargerX - 10, 40, initChargerX + 410, 110, barBGPaint);
-            canvas.drawRect(initChargerX, 50, chargerX, 100, chargerPaint);
-            canvas.drawRect(initHealthX - 10, 40, initHealthX + ball.getMaxHealth() + 10, 110, barBGPaint);
-            canvas.drawRect(initHealthX, 50, healthX, 100, healthPaint);
-            canvas.drawText("Score: " + score, xMax - 150, yMax - 50, wordPaint);
-            for (Entity e : entityList) {
-                e.draw(canvas, genericPaint);
+            if (!paused) {
+                ThreadTest newThread = new ThreadTest();
+                update();
+                newThread.chargerSensor();
+                newThread.toucherSensor();
+                canvas.drawRect(0, 0, size.x, size.y, bgPaint);
+                canvas.drawRect(initChargerX - 10, 40, initChargerX + 410, 110, barBGPaint);
+                canvas.drawRect(initChargerX, 50, chargerX, 100, chargerPaint);
+                canvas.drawRect(initHealthX - 10, 40, initHealthX + ball.getMaxHealth() + 10, 110, barBGPaint);
+                canvas.drawRect(initHealthX, 50, healthX, 100, healthPaint);
+                canvas.drawText("Score: " + score, xMax - 250, yMax - 50, wordPaint);
+                for (Entity e : entityList) {
+                    e.draw(canvas, genericPaint);
+                }
+            } else {
+                update();
+                canvas.drawRect(0, 0, size.x, size.y, pausedPaint);
+                canvas.drawText("PAUSED", xMax/2, yMax/2, pausedWordPaint);
             }
             invalidate();
         }
@@ -337,7 +379,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                     ball.setCharged(false);
                     ballPaint.setColorFilter(null);
                 } else {
-                    if (miniChargerCounter >= CHARGER_DECAY_RATE) {
+                    if (miniChargerCounter >= 3 - difficulty) {
                         chargerX--;
                         miniChargerCounter = 0;
                     } else {
