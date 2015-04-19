@@ -11,7 +11,7 @@ public class ExtraHealth extends Item
                    int hitBoxWidth, int hitBoxHeight, MainActivity main) {
         super ("ExtraHealth", duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
 
-        bmp = BitmapFactory.decodeResource(main.context.getResources(), R.drawable.extraHealth);
+        bmp = BitmapFactory.decodeResource(main.context.getResources(), R.drawable.extra_health);
 
     }
 

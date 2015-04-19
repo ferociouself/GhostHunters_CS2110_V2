@@ -12,7 +12,7 @@ public class TimeFreeze extends Item
                    int hitBoxWidth, int hitBoxHeight, MainActivity main) {
         super ("TimeFreeze", duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
 
-        bmp = BitmapFactory.decodeResource(main.context.getResources(), R.drawable.timeFreezer);
+        bmp = BitmapFactory.decodeResource(main.context.getResources(), R.drawable.time_freezer);
 
     }
 

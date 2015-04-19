@@ -11,7 +11,7 @@ public class Shield extends Item
                  int hitBoxWidth, int hitBoxHeight, MainActivity main) {
         super ("Shield", duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
 
-        bmp = BitmapFactory.decodeResource(main.context.getResources(), R.drawable.Shield);
+        bmp = BitmapFactory.decodeResource(main.context.getResources(), R.drawable.shield);
 
     }
 
