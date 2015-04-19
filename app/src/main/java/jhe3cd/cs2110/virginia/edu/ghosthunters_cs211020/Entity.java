@@ -46,6 +46,7 @@ public abstract class Entity {
         hitBox.set(xPosition, yPosition, xPosition + hitBox.width(), yPosition + hitBox.height());
     }
 
+
     public void centralPointUpdate() {
         centralPoint.set(xPosition + (hitBox.width()/2), yPosition + (hitBox.height()/2));
     }
