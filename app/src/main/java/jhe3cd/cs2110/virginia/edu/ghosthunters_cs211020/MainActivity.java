@@ -107,8 +107,8 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-        xMax = (int) (size.x * 0.97);
-        yMax = (int)(size.y * 0.88);
+        xMax = (int) (size.x * 0.94);
+        yMax = (int)(size.y * 0.80);
 
         initHealthX = xMax - 400;
 
@@ -285,6 +285,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public int incScore(int scoreIncrease) {
         this.score += scoreIncrease;
         return this.score;
+    }
+
+    public void endGame() {
+
     }
 
     public boolean entityRemove(Entity e) {
