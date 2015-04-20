@@ -248,6 +248,11 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private void update() {
         if (doubleTapTimer > 0) {
             doubleTapTimer--;
+            if (doubleTapTimer == 0) {
+                createNewEntity(new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
+                        32, 38, xMax, yMax, 5.0f,
+                        5.0f, 0.9f, 10, this));
+            }
         }
         if (doubleTapTimer == 0) {
             doubleTapTriggered = false;

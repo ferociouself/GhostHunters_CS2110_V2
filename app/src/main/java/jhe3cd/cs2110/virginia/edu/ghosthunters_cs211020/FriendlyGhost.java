@@ -1,6 +1,7 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -26,22 +27,54 @@ public class FriendlyGhost extends Ghost{
     }
 
     public void update() {
-        /*ArrayList<Float> distances = this.distanceBetweenGhosts();
-        Collections.sort(distances);
-        float smallestDist = distances.get(0);*/
-
-        setTarget(findNearestGhostCenter());
-        super.update();
-//        this.setTarget();
-        for(Entity e : this.collisionDetect(main.getEntityList())) {
-            if(e instanceof Ghost) {
-                e.destroyer(DESTROYER_ID);
-            }
+        targetUpdate();
+        xDynAcceleration = ((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
+        yDynAcceleration = ((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
+        this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
+        this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
+        float xS = (xVelocity/2)*MainActivity.FRAME_TIME;
+        float yS = (yVelocity/2)*MainActivity.FRAME_TIME;
+        xPosition += xS;
+        yPosition += yS;
+        if (xPosition + hitBox.width() > xMax) {
+            xPosition = xMax - hitBox.width();
+            xVelocity = -(xVelocity * bounceFactor);
+        } else if (xPosition < 0) {
+            xPosition = 0;
+            xVelocity = -(xVelocity * bounceFactor);
         }
+        if (yPosition + hitBox.height() > yMax) {
+            yPosition = yMax - hitBox.height();
+            yVelocity = -(yVelocity * bounceFactor);
+        } else if (yPosition < 0) {
+            yPosition = 0;
+            yVelocity = -(yVelocity * bounceFactor);
+        }
+        hitBoxUpdate();
+        centralPointUpdate();
+        handleCollisions();
         timeActive++;
         if (timeActive > lifeSpan * 1000) {
             destroyer(DESTROYER_ID);
         }
+    }
+
+    public void handleCollisions() {
+        ArrayList<Entity> collisionArrayList = new ArrayList<>();
+        collisionArrayList.addAll(collisionDetect(main.getEntityList()));
+
+        for (Entity e : collisionArrayList) {
+            if (e instanceof Ghost) {
+                Log.i("BALL", "Ghost collided with");
+                e.destroyer(DESTROYER_ID);
+                main.incScore(50);
+            }
+        }
+    }
+
+    @Override
+    public void targetUpdate() {
+        setTarget(findNearestGhostCenter());
     }
 
     @Deprecated
