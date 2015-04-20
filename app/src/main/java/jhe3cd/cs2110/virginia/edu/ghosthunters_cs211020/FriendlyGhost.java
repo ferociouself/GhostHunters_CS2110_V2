@@ -15,6 +15,7 @@ public class FriendlyGhost extends Ghost{
     private boolean isFriendly;
     int lifeSpan;
     long timeActive;
+    private Point defaultTarget;
 
     public FriendlyGhost(int xPosition, int yPosition, int fileID, int health,
                          int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration,
@@ -23,6 +24,7 @@ public class FriendlyGhost extends Ghost{
                 yMax, xAcceleration, yAcceleration, bounceFactor, main);
         this.isFriendly = true;
         this.lifeSpan = lifeSpan;
+        this.defaultTarget = new Point(xMax/2, yMax/2);
         setTarget(findNearestGhostCenter());
     }
 
@@ -54,8 +56,9 @@ public class FriendlyGhost extends Ghost{
         centralPointUpdate();
         handleCollisions();
         timeActive++;
-        if (timeActive > lifeSpan * 1000) {
+        if (timeActive > lifeSpan * 100) {
             destroyer(DESTROYER_ID);
+            this.main.friendlyGhostSpawned = false;
         }
     }
 
@@ -64,8 +67,8 @@ public class FriendlyGhost extends Ghost{
         collisionArrayList.addAll(collisionDetect(main.getEntityList()));
 
         for (Entity e : collisionArrayList) {
-            if (e instanceof Ghost) {
-                Log.i("BALL", "Ghost collided with");
+            if (e instanceof Ghost && !(e instanceof FriendlyGhost)) {
+                Log.i("friendlyGhost", "Ghost collided with");
                 e.destroyer(DESTROYER_ID);
                 main.incScore(50);
             }
@@ -74,7 +77,13 @@ public class FriendlyGhost extends Ghost{
 
     @Override
     public void targetUpdate() {
-        setTarget(findNearestGhostCenter());
+        Point newTarget = findNearestGhostCenter();
+        if(newTarget != null) {
+            setTarget(findNearestGhostCenter());
+        }
+        else {
+            setTarget(this.defaultTarget);
+        }
     }
 
     @Deprecated
@@ -120,7 +129,7 @@ public class FriendlyGhost extends Ghost{
 
         if (main.getEntityList().size() > 1) {
             for (Entity e : main.getEntityList()) {
-                if (e instanceof Ghost) {
+                if (e instanceof Ghost && !(e instanceof FriendlyGhost)) {
                     double dist = distanceTwoPoints(centralPoint, e.centralPoint);
                     if (dist < minDistance) {
                         minDistance = dist;

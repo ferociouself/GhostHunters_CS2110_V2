@@ -83,6 +83,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public int numGhostsSpawned = 4;
     public int numGhostsActive = 4;
     public int score;
+    public boolean friendlyGhostSpawned;
 
     public int timeCounter = 0;
 
@@ -247,12 +248,24 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
     private void update() {
+//        this.friendlyGhostSpawned = false;
+//        if(this.score % 100 == 0 && this.score != 0 && this.friendlyGhostSpawned == false) {
+//            FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
+//                    32, 38, xMax, yMax, 5.0f,
+//                    5.0f, 0.9f, 10, this);
+//            createNewEntity(casper);
+//            this.friendlyGhostSpawned = true;
+//            if(this.getBall().getHitBox().intersects(casper.getxPosition(), casper.getxPosition() + casper.getHitBox().height(),
+//                    casper.getyPosition(), casper.getyPosition() + casper.getHitBox().width() )) {
+//                casper.update();
+//            }
+//        }
         if (doubleTapTimer > 0) {
             doubleTapTimer--;
             if (doubleTapTimer == 0) {
-                createNewEntity(new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
-                        32, 38, xMax, yMax, 5.0f,
-                        5.0f, 0.9f, 10, this));
+//                createNewEntity(new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
+//                        32, 38, xMax, yMax, 5.0f,
+//                        5.0f, 0.9f, 10, this));
             }
         }
         if (doubleTapTimer == 0) {
@@ -300,6 +313,16 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public static void setDifficulty(int newDifficulty) {
         difficulty = newDifficulty;
     }
+
+    public FriendlyGhost getFriendlyGhost() {
+        for(Entity e : this.getEntityList()) {
+            if(e instanceof FriendlyGhost) {
+                return (FriendlyGhost) e;
+            }
+        }
+        return null;
+    }
+
 
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
