@@ -118,7 +118,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         score = 0;
 
-        customDrawView = new CustomDrawableView(this);
+        customDrawView = new CustomDrawableView(this, this);
         context = customDrawView.getContext();
         setContentView(customDrawView);
     }
@@ -334,7 +334,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         private int chargerBarHeight;
         private int chargerBarWidth;
 
-        public CustomDrawableView(Context context) {
+        MainActivity main;
+
+        public CustomDrawableView(Context context, MainActivity main) {
             super(context);
             /*Bitmap ballBMP = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
             final int dstWidth = BALL_WIDTH;
@@ -342,6 +344,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             mainBitmap = Bitmap.createScaledBitmap(ballBMP, dstWidth, dstHeight, true);*/
             /*ballBMP = decodeSampledBitmapFromResource(getResources(), R.drawable.ball,
                     BALL_WIDTH, BALL_HEIGHT);*/
+            this.main = main;
 
         }
 
@@ -364,9 +367,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 Random rand1 = new Random();
                 Random rand2 = new Random();
 
-                //           if(rand1.nextFloat() < .001) entityList.add(new Shield(30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, main));
-                //           if(rand1.nextFloat() < .002 && rand1.nextFloat() >= 0.001) entityList.add(new ExtraHealth(30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, main));
-                //           if(rand1.nextFloat() < .003 && rand1.nextFloat() >= 0.002) entityList.add(new TimeFreeze(15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, main));
+               if(rand1.nextFloat() < .001) entityList.add(new Shield(30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, main));
+               if(rand1.nextFloat() < .002 && rand1.nextFloat() >= 0.001) entityList.add(new ExtraHealth(30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, main));
+               if(rand1.nextFloat() < .003 && rand1.nextFloat() >= 0.002) entityList.add(new TimeFreeze(15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, main));
 
                 for (Entity e : entityList) {
                     e.draw(canvas, genericPaint);
