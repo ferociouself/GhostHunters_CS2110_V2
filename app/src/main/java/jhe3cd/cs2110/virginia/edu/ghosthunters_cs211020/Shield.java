@@ -9,7 +9,7 @@ public class Shield extends Item
 {
     public Shield(int duration, int fileID, int xPosition, int yPosition, int xMax, int yMax,
                  int hitBoxWidth, int hitBoxHeight, MainActivity main) {
-        super ("Shield", duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
+        super ("shield", duration, fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
 
         bmp = BitmapFactory.decodeResource(main.context.getResources(), R.drawable.shield);
 
