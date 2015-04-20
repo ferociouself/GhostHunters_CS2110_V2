@@ -61,12 +61,17 @@ public class Ball extends Entity{
         xVelocity *= speedMod;
         yVelocity *= speedMod;
 
+        float xS = 0;
+        float yS = 0;
         //Calculate distance travelled in that time
-        float xS = (xVelocity)*MainActivity.FRAME_TIME;
-        float yS = (yVelocity)*MainActivity.FRAME_TIME;
+        if (MainActivity.getDifficulty() >= 1) {
+            xS = (xVelocity)*MainActivity.FRAME_TIME;
+            yS = (yVelocity)*MainActivity.FRAME_TIME;
+        } else {
+            xS = (xVelocity/2) * MainActivity.FRAME_TIME;
+            yS = (yVelocity/2) * MainActivity.FRAME_TIME;
+        }
 
-        //Add to position negative due to sensor
-        //readings being opposite to what we want!
         xPosition += (int) xS;
         yPosition += (int) yS;
 

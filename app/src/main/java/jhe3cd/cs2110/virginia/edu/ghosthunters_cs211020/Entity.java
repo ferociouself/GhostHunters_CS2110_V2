@@ -1,5 +1,6 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
+import android.animation.RectEvaluator;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.drawable.shapes.RectShape;
 
 import java.util.ArrayList;
 
@@ -43,12 +46,12 @@ public abstract class Entity {
     public abstract void update();
 
     public void hitBoxUpdate() {
-        hitBox.set(xPosition, yPosition, xPosition + hitBox.width(), yPosition + hitBox.height());
+        hitBox.offsetTo(xPosition, yPosition);
     }
 
 
     public void centralPointUpdate() {
-        centralPoint.set(xPosition + (hitBox.width()/2), yPosition + (hitBox.height()/2));
+        centralPoint.set((int) hitBox.exactCenterX(), (int) hitBox.exactCenterY());
     }
 
     public ArrayList<Entity> collisionDetect(ArrayList<Entity> entityArrayList) {
@@ -57,12 +60,17 @@ public abstract class Entity {
         tempArrayList.remove(this);
         ArrayList<Entity> collisionArrayList = new ArrayList<>();
         for (Entity e : tempArrayList) {
-            if (Rect.intersects(this.hitBox, e.hitBox)) {
+            if (hitBox.intersects(e.hitBox.left, e.hitBox.top, e.hitBox.right, e.hitBox.bottom)) {
                 collisionArrayList.add(e);
             }
         }
         return collisionArrayList;
     }
+
+    public boolean intersection(Rect a, Rect b) {
+        return (a.left < b.right && b.left < a.right) && (a.top < b.bottom && b.top < a.bottom);
+    }
+
 
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawBitmap(bmp, xPosition, yPosition, paint);

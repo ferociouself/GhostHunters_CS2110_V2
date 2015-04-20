@@ -12,21 +12,21 @@ public class Ghost extends Entity{
 
     private static final String DESTROYER_ID = "ghost";
 
-    private float xVelocity;
-    private float yVelocity;
-    private float xOrigAcceleration = 0.0f;
-    private float yOrigAcceleration = 0.0f;
-    private float xDynAcceleration = 0.0f;
-    private float yDynAcceleration = 0.0f;
+    protected float xVelocity;
+    protected float yVelocity;
+    protected float xOrigAcceleration = 0.0f;
+    protected float yOrigAcceleration = 0.0f;
+    protected float xDynAcceleration = 0.0f;
+    protected float yDynAcceleration = 0.0f;
     boolean isVisible;
-    private Point target;
+    protected Point target;
     private Item booty;
-    private int health;
+    protected int health;
 
     private boolean ballTouching;
     private boolean ballCharged;
     private boolean frozen;
-    private float bounceFactor = 0.0f;
+    protected float bounceFactor = 0.0f;
     private MainActivity.CustomDrawableView c ;
 
     private boolean isColliding = false;
@@ -52,7 +52,7 @@ public class Ghost extends Entity{
     }
 
     public void update() {
-        target.set(main.getBall().getxPosition(), main.getBall().getyPosition());
+        targetUpdate();
         ballTouching = main.getBall().isTouching();
         ballCharged = main.getBall().isCharged();
         handleCollisions();
@@ -66,12 +66,17 @@ public class Ghost extends Entity{
             }
             this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
             this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
+        } else if (MainActivity.getDifficulty() == 2) {
+            xDynAcceleration = 0.0f;
+            yDynAcceleration = 0.0f;
         } else {
             xDynAcceleration = 0.0f;
             yDynAcceleration = 0.0f;
             xVelocity = xVelocity * 0.90f;
             yVelocity = yVelocity * 0.95f;
         }
+
+
 
 
         //Calc distance travelled in that time
@@ -99,11 +104,14 @@ public class Ghost extends Entity{
         centralPointUpdate();
     }
 
+    public void targetUpdate() {
+        target.set(main.getBall().getxPosition(), main.getBall().getyPosition());
+    }
+
     public void destroyer(String destroyer) {
-        int ran1 = (int) (Math.random() * 100);
-        if (destroyer.equals("ball") && ran1 > 90) {
+        if (destroyer.equals("ball") && Math.random() > .90) {
             main.createNewEntity(new FriendlyGhost(xPosition, yPosition, R.drawable.friendly_ghost,
-                    null, null, 10, hitBox.width(), hitBox.height(), xMax, yMax, xOrigAcceleration,
+                    10, hitBox.width(), hitBox.height(), xMax, yMax, xOrigAcceleration,
                     yOrigAcceleration, bounceFactor, 8, main));
         }
         main.reduceNumGhostsActive(1);
@@ -122,6 +130,7 @@ public class Ghost extends Entity{
             }
             if (e instanceof Ball)
             {
+                if (!main.getBall().isCharged()) {
                 Ball it = (Ball)e;
 
                 if (it.getItemStored() != null) {
@@ -149,9 +158,16 @@ public class Ghost extends Entity{
                             break;
                     }
                 }
-                main.getBall().incHealth(-30);
-                destroyer(DESTROYER_ID);
-                break;
+                    if (MainActivity.getDifficulty() == 2) {
+                        main.getBall().incHealth(-60);
+                        destroyer(DESTROYER_ID);
+                        break;
+                    } else {
+                        main.getBall().incHealth(-30);
+                        destroyer(DESTROYER_ID);
+                        break;
+                    }
+                }
             }
         }
         isColliding = collisionArrayList.size() > 1;
