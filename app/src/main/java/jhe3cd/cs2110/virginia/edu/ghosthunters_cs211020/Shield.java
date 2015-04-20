@@ -15,6 +15,7 @@ public class Shield extends Item
 
     }
 
+
     public void activate()
     {
         super.randomlyGenerate();
