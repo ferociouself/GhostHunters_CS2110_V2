@@ -11,21 +11,21 @@ public class Ghost extends Entity{
 
     private static final String DESTROYER_ID = "ghost";
 
-    private float xVelocity;
-    private float yVelocity;
-    private float xOrigAcceleration = 0.0f;
-    private float yOrigAcceleration = 0.0f;
-    private float xDynAcceleration = 0.0f;
-    private float yDynAcceleration = 0.0f;
+    protected float xVelocity;
+    protected float yVelocity;
+    protected float xOrigAcceleration = 0.0f;
+    protected float yOrigAcceleration = 0.0f;
+    protected float xDynAcceleration = 0.0f;
+    protected float yDynAcceleration = 0.0f;
     boolean isVisible;
-    private Point target;
+    protected Point target;
     private Item booty;
-    private int health;
+    protected int health;
 
     private boolean ballTouching;
     private boolean ballCharged;
     private boolean frozen;
-    private float bounceFactor = 0.0f;
+    protected float bounceFactor = 0.0f;
 
     private boolean isColliding = false;
 
@@ -49,7 +49,7 @@ public class Ghost extends Entity{
     }
 
     public void update() {
-        target.set(main.getBall().getxPosition(), main.getBall().getyPosition());
+        targetUpdate();
         ballTouching = main.getBall().isTouching();
         ballCharged = main.getBall().isCharged();
         handleCollisions();
@@ -72,6 +72,8 @@ public class Ghost extends Entity{
             xVelocity = xVelocity * 0.90f;
             yVelocity = yVelocity * 0.95f;
         }
+
+
 
 
         //Calc distance travelled in that time
@@ -97,6 +99,10 @@ public class Ghost extends Entity{
 
         hitBoxUpdate();
         centralPointUpdate();
+    }
+
+    public void targetUpdate() {
+        target.set(main.getBall().getxPosition(), main.getBall().getyPosition());
     }
 
     public void destroyer(String destroyer) {
