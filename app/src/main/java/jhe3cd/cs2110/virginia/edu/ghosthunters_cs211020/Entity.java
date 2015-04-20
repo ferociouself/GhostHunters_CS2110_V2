@@ -49,6 +49,7 @@ public abstract class Entity {
         hitBox.offsetTo(xPosition, yPosition);
     }
 
+
     public void centralPointUpdate() {
         centralPoint.set((int) hitBox.exactCenterX(), (int) hitBox.exactCenterY());
     }

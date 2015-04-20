@@ -95,9 +95,13 @@ public class Ball extends Entity{
         hitBoxUpdate();
         centralPointUpdate();
         handleCollisions();
+        if (health == 0) {
+            this.destroyer(DESTROYER_ID);
+        }
     }
 
     public void destroyer(String destroyer) {
+        main.endGame();
         main.entityRemove(this);
     }
 

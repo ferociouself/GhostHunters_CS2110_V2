@@ -3,6 +3,7 @@ package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 import android.graphics.Point;
 
 import java.util.ArrayList;
+import android.graphics.*;
 
 /**
  * Created by JacksonEkis on 3/30/15.
@@ -26,6 +27,7 @@ public class Ghost extends Entity{
     private boolean ballCharged;
     private boolean frozen;
     protected float bounceFactor = 0.0f;
+    private MainActivity.CustomDrawableView c ;
 
     private boolean isColliding = false;
 
@@ -46,6 +48,7 @@ public class Ghost extends Entity{
         this.ballCharged = false;
         this.frozen = false;
         this.main = main;
+     //   this.c = new MainActivity.CustomDrawableView();
     }
 
     public void update() {
@@ -136,14 +139,17 @@ public class Ghost extends Entity{
 
                     switch (id) {
                         case "shield":
+                            main.getEntityList().remove(it);
                             break;
 
                         case "extraHealth":
                             main.getBall().incHealth(30);
+                            main.getEntityList().remove(it);
                             break;
 
                         case "timeFreezer":
                             frozen = true;
+                            main.getEntityList().remove(it);
                             break;
 
                         default:
@@ -205,6 +211,8 @@ public class Ghost extends Entity{
         xPosition = (int) (Math.random() * xMax);
         yPosition = (int) (Math.random() * yMax);
     }
+
+
 
     public float getxVelocity() {
         return xVelocity;
