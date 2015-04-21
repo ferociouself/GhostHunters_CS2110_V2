@@ -1,4 +1,6 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
+import android.graphics.BitmapFactory;
+
 import java.util.*;
 /**
  * Created by Jimmy on 3/30/2015.
@@ -22,6 +24,8 @@ public class Item extends Entity
     public Item(String itemID, double duration, int fileID, int xPosition, int yPosition, int xMax, int yMax,
                 int hitBoxWidth, int hitBoxHeight, MainActivity main)
     {
+
+
         super(fileID,xPosition, yPosition, xMax, yMax,hitBoxWidth,hitBoxHeight, main);
         randomlyGenerate();
         this.itemID = itemID;

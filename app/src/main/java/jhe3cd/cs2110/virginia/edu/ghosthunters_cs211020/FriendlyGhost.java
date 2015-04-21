@@ -1,6 +1,7 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -14,32 +15,74 @@ public class FriendlyGhost extends Ghost{
     private boolean isFriendly;
     int lifeSpan;
     long timeActive;
+    private Point defaultTarget;
 
-    public FriendlyGhost(int xPosition, int yPosition, int fileID, Point target, Item booty, int health,
+    public FriendlyGhost(int xPosition, int yPosition, int fileID, int health,
                          int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration,
                          float yAcceleration, float bounceFactor, int lifeSpan, MainActivity main) {
-        super(xPosition, yPosition, fileID, target, booty, health, hitBoxWidth, hitBoxHeight, xMax,
+        super(xPosition, yPosition, fileID, null, null, health, hitBoxWidth, hitBoxHeight, xMax,
                 yMax, xAcceleration, yAcceleration, bounceFactor, main);
         this.isFriendly = true;
         this.lifeSpan = lifeSpan;
+        this.defaultTarget = new Point(xMax/2, yMax/2);
+        setTarget(findNearestGhostCenter());
     }
 
     public void update() {
-        /*ArrayList<Float> distances = this.distanceBetweenGhosts();
-        Collections.sort(distances);
-        float smallestDist = distances.get(0);*/
+        targetUpdate();
+        xDynAcceleration = ((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
+        yDynAcceleration = ((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
+        this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
+        this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
+        float xS = (xVelocity/2)*MainActivity.FRAME_TIME;
+        float yS = (yVelocity/2)*MainActivity.FRAME_TIME;
+        xPosition += xS;
+        yPosition += yS;
+        if (xPosition + hitBox.width() > xMax) {
+            xPosition = xMax - hitBox.width();
+            xVelocity = -(xVelocity * bounceFactor);
+        } else if (xPosition < 0) {
+            xPosition = 0;
+            xVelocity = -(xVelocity * bounceFactor);
+        }
+        if (yPosition + hitBox.height() > yMax) {
+            yPosition = yMax - hitBox.height();
+            yVelocity = -(yVelocity * bounceFactor);
+        } else if (yPosition < 0) {
+            yPosition = 0;
+            yVelocity = -(yVelocity * bounceFactor);
+        }
+        hitBoxUpdate();
+        centralPointUpdate();
+        handleCollisions();
+        timeActive++;
+        if (timeActive > lifeSpan * 100) {
+            destroyer(DESTROYER_ID);
+            this.main.friendlyGhostSpawned = false;
+        }
+    }
 
-        setTarget(findNearestGhostCenter());
-        super.update();
-//        this.setTarget();
-        for(Entity e : this.collisionDetect(main.getEntityList())) {
-            if(e instanceof Ghost) {
+    public void handleCollisions() {
+        ArrayList<Entity> collisionArrayList = new ArrayList<>();
+        collisionArrayList.addAll(collisionDetect(main.getEntityList()));
+
+        for (Entity e : collisionArrayList) {
+            if (e instanceof Ghost && !(e instanceof FriendlyGhost)) {
+                Log.i("friendlyGhost", "Ghost collided with");
                 e.destroyer(DESTROYER_ID);
+                main.incScore(50);
             }
         }
-        timeActive++;
-        if (timeActive > lifeSpan * 1000) {
-            destroyer(DESTROYER_ID);
+    }
+
+    @Override
+    public void targetUpdate() {
+        Point newTarget = findNearestGhostCenter();
+        if(newTarget != null) {
+            setTarget(findNearestGhostCenter());
+        }
+        else {
+            setTarget(this.defaultTarget);
         }
     }
 
@@ -86,7 +129,7 @@ public class FriendlyGhost extends Ghost{
 
         if (main.getEntityList().size() > 1) {
             for (Entity e : main.getEntityList()) {
-                if (e instanceof Ghost) {
+                if (e instanceof Ghost && !(e instanceof FriendlyGhost)) {
                     double dist = distanceTwoPoints(centralPoint, e.centralPoint);
                     if (dist < minDistance) {
                         minDistance = dist;
