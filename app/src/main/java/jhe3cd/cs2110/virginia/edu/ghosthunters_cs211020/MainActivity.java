@@ -394,6 +394,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 canvas.drawText("Score: " + score, xMax - 250, yMax - 50, wordPaint);
                 Random rand1 = new Random();
                 Random rand2 = new Random();
+
                 if(rand1.nextFloat() < .0001) entityList.add(new Shield(30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
                 if(rand1.nextFloat() < .0002 && rand1.nextFloat() >= 0.0001) entityList.add(new ExtraHealth(30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
                 if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new TimeFreeze(15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
