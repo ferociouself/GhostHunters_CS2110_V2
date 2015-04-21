@@ -13,6 +13,7 @@ public class Item extends Entity
 
     protected TreeMap <String,Integer> itemFrequency = new TreeMap <String,Integer>();
     protected ArrayList <String> randomList = new ArrayList<String>();
+    protected HashMap<String, Integer> fileIDMap = new HashMap<>();
 
     public void activate() {
         activated = true;
@@ -31,6 +32,8 @@ public class Item extends Entity
         this.itemID = itemID;
         this.duration = duration;
         activated = false;
+
+        fileIDMap.put("shield", R.drawable.shield);
 
         itemFrequency.put("shield",30);
         itemFrequency.put("timeFreezer",15);

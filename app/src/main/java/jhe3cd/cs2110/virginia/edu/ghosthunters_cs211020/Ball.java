@@ -100,6 +100,7 @@ public class Ball extends Entity{
     }
 
     public void destroyer(String destroyer) {
+        main.endGame();
         main.entityRemove(this);
     }
 
@@ -112,10 +113,8 @@ public class Ball extends Entity{
         ArrayList<Entity> collisionArrayList = new ArrayList<>();
         collisionArrayList.addAll(collisionDetect(main.getEntityList()));
 
-        for (Entity e : collisionArrayList)
-        {
-            if (e instanceof Ghost && isCharged)
-            {
+        for (Entity e : collisionArrayList) {
+            if (e instanceof Ghost && isCharged) {
                 Log.i("BALL", "Ghost collided with");
                 e.destroyer(DESTROYER_ID);
                 main.incScore(100);

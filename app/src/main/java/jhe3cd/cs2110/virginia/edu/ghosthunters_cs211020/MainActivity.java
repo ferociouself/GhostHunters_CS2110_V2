@@ -37,62 +37,61 @@ import java.util.*;
 public class MainActivity extends ActionBarActivity implements SensorEventListener {
 
     CustomDrawableView customDrawView = null;
-    public int xMax, yMax;
+    private int xMax, yMax;
     private SensorManager sensorManager = null;
     public static final float FRAME_TIME = 0.666f;
 
     private Sensor accelerometer;
 
-    public Point size;
+    private Point size;
 
-    public Ball ball;
+    private Ball ball;
 
-    public int initChargerX = 100;
-    public int chargerX = initChargerX + 10;
+    private int initChargerX = 100;
+    private int chargerX = initChargerX + 10;
     public static final int CHARGER_DECAY_RATE = 3;
     // Charger decay rate in ticks per 1 decay.
-    public int miniChargerCounter = 0;
+    private int miniChargerCounter = 0;
     // Keeps track of the ticks.
 
-    public int initHealthX;
-    public int healthX;
+    private int initHealthX;
+    private int healthX;
 
-    public Paint bgPaint;
-    public Paint ballPaint;
-    public Paint chargerPaint;
-    public Paint barBGPaint;
-    public Paint genericPaint;
-    public Paint wordPaint;
-    public Paint healthPaint;
-    public Paint pausedPaint;
-    public Paint pausedWordPaint;
+    private Paint bgPaint;
+    private Paint ballPaint;
+    private Paint chargerPaint;
+    private Paint barBGPaint;
+    private Paint genericPaint;
+    private Paint wordPaint;
+    private Paint healthPaint;
+    private Paint pausedPaint;
+    private Paint pausedWordPaint;
 
-    public ColorFilter cFilter;
+    private ColorFilter cFilter;
 
-    public int doubleTapTimer = 0;
-    public boolean doubleTapTriggered = false;
-    public Context context;
+    private int doubleTapTimer = 0;
+    private boolean doubleTapTriggered = false;
 
     public static final int BALL_WIDTH = 40;
     public static final int BALL_HEIGHT = 40;
 
-    public ArrayList<Entity> entityList = new ArrayList<>();
-    public ArrayList<Entity> entitiesRemoved = new ArrayList<>();
+    private ArrayList<Entity> entityList = new ArrayList<>();
+    private ArrayList<Entity> entitiesRemoved = new ArrayList<>();
 
-    public HashMap<String, Item> itemMap = new HashMap<>();
+    private int numGhostsSpawned = 4;
+    private int numGhostsActive = 4;
+    private int score;
+    private boolean friendlyGhostSpawned;
 
-    public int numGhostsSpawned = 4;
-    public int numGhostsActive = 4;
-    public int score;
-    public boolean friendlyGhostSpawned;
-
-    public int timeCounter = 0;
+    private int timeCounter = 0;
 
     public static int difficulty = 0;
 
     public static final String SHIELD_ID = "shield";
+    public static final String EXTRAHEALTH_ID = "extraHealth";
+    public static final String TIMEFREEZER_ID = "timeFreezer";
 
-    public boolean paused = false;
+    private boolean paused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,12 +119,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         score = 0;
 
         customDrawView = new CustomDrawableView(this, this);
-        context = customDrawView.getContext();
         setContentView(customDrawView);
-    }
-
-    public Context context(){
-        return context;
     }
 
     public void setPaints() {
@@ -267,6 +261,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //                casper.update();
 //            }
 //        }
+        if (score % 1000 == 0 && !friendlyGhostSpawned) {
+            FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
+                    32, 38, xMax, yMax, 5.0f,
+                    5.0f, 0.9f, 10, this);
+            createNewEntity(casper);
+            friendlyGhostSpawned = true;
+        }
         if (doubleTapTimer > 0) {
             doubleTapTimer--;
             if (doubleTapTimer == 0) {
@@ -334,6 +335,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         return null;
     }
 
+    public boolean isFriendlyGhostSpawned() {
+        return friendlyGhostSpawned;
+    }
+
+    public void setFriendlyGhostSpawned(boolean friendlyGhostSpawned) {
+        this.friendlyGhostSpawned = friendlyGhostSpawned;
+    }
 
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -395,9 +403,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 Random rand1 = new Random();
                 Random rand2 = new Random();
 
-                if(rand1.nextFloat() < .0001) entityList.add(new Shield(30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
-                if(rand1.nextFloat() < .0002 && rand1.nextFloat() >= 0.0001) entityList.add(new ExtraHealth(30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
-                if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new TimeFreeze(15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
+                if(rand1.nextFloat() < .0001) entityList.add(new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
+                if(rand1.nextFloat() < .0002 && rand1.nextFloat() >= 0.0001) entityList.add(new Item(EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
+                if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new Item(TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
 
                 for (Entity e : entityList) {
                     e.draw(canvas, genericPaint);

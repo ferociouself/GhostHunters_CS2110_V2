@@ -58,7 +58,6 @@ public class FriendlyGhost extends Ghost{
         timeActive++;
         if (timeActive > lifeSpan * 100) {
             destroyer(DESTROYER_ID);
-            this.main.friendlyGhostSpawned = false;
         }
     }
 
@@ -145,5 +144,6 @@ public class FriendlyGhost extends Ghost{
 
     public void destroyer(String destroyer) {
         main.entityRemove(this);
+        this.main.setFriendlyGhostSpawned(false);
     }
 }
