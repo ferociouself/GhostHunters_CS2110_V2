@@ -58,7 +58,6 @@ public class FriendlyGhost extends Ghost{
         timeActive++;
         if (timeActive > lifeSpan * 100) {
             destroyer(DESTROYER_ID);
-
         }
     }
 
