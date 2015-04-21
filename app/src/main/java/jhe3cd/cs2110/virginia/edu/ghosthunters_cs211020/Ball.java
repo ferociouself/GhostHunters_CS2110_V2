@@ -30,6 +30,8 @@ public class Ball extends Entity{
 
     private Item itemStored;
 
+    private int timeFrozen = 0;
+
     public Ball (int fileID, int xPosition, int yPosition, float speedMod,
                  int xMax, int yMax, int hitBoxWidth, int hitBoxHeight, float bounceFactor,
                  int health, MainActivity main) {
@@ -90,6 +92,11 @@ public class Ball extends Entity{
         hitBoxUpdate();
         centralPointUpdate();
         handleCollisions();
+
+        if(timeFrozen > 0)
+            timeFrozen--;
+        if(timeFrozen == 0)
+            freezeGhosts(false);
     }
 
     public void destroyer(String destroyer) {
@@ -105,16 +112,51 @@ public class Ball extends Entity{
         ArrayList<Entity> collisionArrayList = new ArrayList<>();
         collisionArrayList.addAll(collisionDetect(main.getEntityList()));
 
-        for (Entity e : collisionArrayList) {
-            if (e instanceof Ghost && isCharged) {
+        for (Entity e : collisionArrayList)
+        {
+            if (e instanceof Ghost && isCharged)
+            {
                 Log.i("BALL", "Ghost collided with");
                 e.destroyer(DESTROYER_ID);
                 main.incScore(100);
             }
+
+            else if (e instanceof Ghost && !isCharged && this.getItemStored().getItemID().equals("shield"))
+            {
+                Log.i("BALL", "Ghost collided with");
+                e.destroyer(DESTROYER_ID);
+                main.incScore(100);
+            }
+
+            else if (e instanceof Item)
+            {
+                Item it = (Item) e;
+
+                this.setItemStored(it);
+                switch(it.getItemID())
+                {
+                    case "extraHealth":
+                        this.incHealth(30);
+                        break;
+                    case "timeFrozen":
+                        freezeGhosts(true);
+                        timeFrozen = 20;
+                        break;
+                    case "rayGun":
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
         }
+
+
     }
 
-    public void incHealth(int added) {
+    public void incHealth(int added)
+    {
         health += added;
     }
 
@@ -172,5 +214,17 @@ public class Ball extends Entity{
 
     public void setItemStored(Item itemStored) {
         this.itemStored = itemStored;
+    }
+
+    public void freezeGhosts(boolean b)
+    {
+        for(Entity e : main.getEntityList())
+        {
+            if(e instanceof Ghost)
+            {
+                Ghost g = (Ghost) e;
+                g.setFrozen(b);
+            }
+        }
     }
 }
