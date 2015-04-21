@@ -51,57 +51,62 @@ public class Ghost extends Entity{
      //   this.c = new MainActivity.CustomDrawableView();
     }
 
-    public void update() {
-        targetUpdate();
-        ballTouching = main.getBall().isTouching();
-        ballCharged = main.getBall().isCharged();
-        handleCollisions();
-        if(ballTouching && !ballCharged && !frozen) {
-            if (isColliding) {
-                xDynAcceleration = -((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
-                yDynAcceleration = -((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
+    public void update()
+    {
+        if(!frozen)
+        {
+            targetUpdate();
+            ballTouching = main.getBall().isTouching();
+            ballCharged = main.getBall().isCharged();
+            handleCollisions();
+            if(ballTouching && !ballCharged && !frozen) {
+                if (isColliding) {
+                    xDynAcceleration = -((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
+                    yDynAcceleration = -((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
+                } else {
+                    xDynAcceleration = ((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
+                    yDynAcceleration = ((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
+                }
+                this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
+                this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
+            } else if (MainActivity.getDifficulty() == 2) {
+                xDynAcceleration = 0.0f;
+                yDynAcceleration = 0.0f;
             } else {
-                xDynAcceleration = ((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
-                yDynAcceleration = ((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
+                xDynAcceleration = 0.0f;
+                yDynAcceleration = 0.0f;
+                xVelocity = xVelocity * 0.90f;
+                yVelocity = yVelocity * 0.95f;
             }
-            this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
-            this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
-        } else if (MainActivity.getDifficulty() == 2) {
-            xDynAcceleration = 0.0f;
-            yDynAcceleration = 0.0f;
-        } else {
-            xDynAcceleration = 0.0f;
-            yDynAcceleration = 0.0f;
-            xVelocity = xVelocity * 0.90f;
-            yVelocity = yVelocity * 0.95f;
+
+
+
+
+            //Calc distance travelled in that time
+            float xS = (xVelocity/2)*MainActivity.FRAME_TIME;
+            float yS = (yVelocity/2)*MainActivity.FRAME_TIME;
+            xPosition += xS;
+            yPosition += yS;
+
+            if (xPosition + hitBox.width() > xMax) {
+                xPosition = xMax - hitBox.width();
+                xVelocity = -(xVelocity * bounceFactor);
+            } else if (xPosition < 0) {
+                xPosition = 0;
+                xVelocity = -(xVelocity * bounceFactor);
+            }
+            if (yPosition + hitBox.height() > yMax) {
+                yPosition = yMax - hitBox.height();
+                yVelocity = -(yVelocity * bounceFactor);
+            } else if (yPosition < 0) {
+                yPosition = 0;
+                yVelocity = -(yVelocity * bounceFactor);
+            }
+
+            hitBoxUpdate();
+            centralPointUpdate();
         }
 
-
-
-
-        //Calc distance travelled in that time
-        float xS = (xVelocity/2)*MainActivity.FRAME_TIME;
-        float yS = (yVelocity/2)*MainActivity.FRAME_TIME;
-        xPosition += xS;
-        yPosition += yS;
-
-        if (xPosition + hitBox.width() > xMax) {
-            xPosition = xMax - hitBox.width();
-            xVelocity = -(xVelocity * bounceFactor);
-        } else if (xPosition < 0) {
-            xPosition = 0;
-            xVelocity = -(xVelocity * bounceFactor);
-        }
-        if (yPosition + hitBox.height() > yMax) {
-            yPosition = yMax - hitBox.height();
-            yVelocity = -(yVelocity * bounceFactor);
-        } else if (yPosition < 0) {
-            yPosition = 0;
-            yVelocity = -(yVelocity * bounceFactor);
-        }
-
-        hitBoxUpdate();
-        centralPointUpdate();
     }
 
     public void targetUpdate() {
@@ -249,4 +254,6 @@ public class Ghost extends Entity{
     public void setTarget(Point target) {
         this.target = target;
     }
+
+    public void setFrozen(boolean b) { this.frozen = b; }
 }

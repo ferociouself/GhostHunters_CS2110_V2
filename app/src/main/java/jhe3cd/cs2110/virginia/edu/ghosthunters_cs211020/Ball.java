@@ -30,6 +30,8 @@ public class Ball extends Entity{
 
     private Item itemStored;
 
+    private int timeFrozen = 0;
+
     public Ball (int fileID, int xPosition, int yPosition, float speedMod,
                  int xMax, int yMax, int hitBoxWidth, int hitBoxHeight, float bounceFactor,
                  int health, MainActivity main) {
@@ -61,17 +63,12 @@ public class Ball extends Entity{
         xVelocity *= speedMod;
         yVelocity *= speedMod;
 
-        float xS = 0;
-        float yS = 0;
         //Calculate distance travelled in that time
-        if (MainActivity.getDifficulty() >= 1) {
-            xS = (xVelocity)*MainActivity.FRAME_TIME;
-            yS = (yVelocity)*MainActivity.FRAME_TIME;
-        } else {
-            xS = (xVelocity/2) * MainActivity.FRAME_TIME;
-            yS = (yVelocity/2) * MainActivity.FRAME_TIME;
-        }
+        float xS = (xVelocity)*MainActivity.FRAME_TIME;
+        float yS = (yVelocity)*MainActivity.FRAME_TIME;
 
+        //Add to position negative due to sensor
+        //readings being opposite to what we want!
         xPosition += (int) xS;
         yPosition += (int) yS;
 
@@ -95,9 +92,11 @@ public class Ball extends Entity{
         hitBoxUpdate();
         centralPointUpdate();
         handleCollisions();
-        if (health == 0) {
-            this.destroyer(DESTROYER_ID);
-        }
+
+        if(timeFrozen > 0)
+            timeFrozen--;
+        if(timeFrozen == 0)
+            freezeGhosts(false);
     }
 
     public void destroyer(String destroyer) {
@@ -120,17 +119,43 @@ public class Ball extends Entity{
                 e.destroyer(DESTROYER_ID);
                 main.incScore(100);
             }
-            if (e instanceof Item) {
-                Log.i("BALL", "Item collided with");
-                ((Item) e).activate();
-                if (!(((Item) e).getItemID().equals("extraHealth"))) {
-                    itemStored = (Item) e;
+
+            else if (e instanceof Ghost && !isCharged && this.getItemStored().getItemID().equals("shield"))
+            {
+                Log.i("BALL", "Ghost collided with");
+                e.destroyer(DESTROYER_ID);
+                main.incScore(100);
+            }
+
+            else if (e instanceof Item)
+            {
+                Item it = (Item) e;
+
+                this.setItemStored(it);
+                switch(it.getItemID())
+                {
+                    case "extraHealth":
+                        this.incHealth(30);
+                        break;
+                    case "timeFrozen":
+                        freezeGhosts(true);
+                        timeFrozen = 20;
+                        break;
+                    case "rayGun":
+                        break;
+
+                    default:
+                        break;
                 }
+
             }
         }
+
+
     }
 
-    public void incHealth(int added) {
+    public void incHealth(int added)
+    {
         health += added;
     }
 
@@ -188,5 +213,17 @@ public class Ball extends Entity{
 
     public void setItemStored(Item itemStored) {
         this.itemStored = itemStored;
+    }
+
+    public void freezeGhosts(boolean b)
+    {
+        for(Entity e : main.getEntityList())
+        {
+            if(e instanceof Ghost)
+            {
+                Ghost g = (Ghost) e;
+                g.setFrozen(b);
+            }
+        }
     }
 }
