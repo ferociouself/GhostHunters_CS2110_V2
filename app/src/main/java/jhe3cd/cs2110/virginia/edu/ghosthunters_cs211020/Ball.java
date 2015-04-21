@@ -120,11 +120,13 @@ public class Ball extends Entity{
                 e.destroyer(DESTROYER_ID);
                 main.incScore(100);
             }
-            /*if (e instanceof Item) {
+            if (e instanceof Item) {
                 Log.i("BALL", "Item collided with");
                 ((Item) e).activate();
-                itemStored = (Item) e;
-            }*/
+                if (!(((Item) e).getItemID().equals("extraHealth"))) {
+                    itemStored = (Item) e;
+                }
+            }
         }
     }
 
