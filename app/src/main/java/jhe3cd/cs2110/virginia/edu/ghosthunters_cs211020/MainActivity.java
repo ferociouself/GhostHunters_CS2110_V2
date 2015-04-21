@@ -255,18 +255,18 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
     private void update() {
-//        this.friendlyGhostSpawned = false;
-//        if(this.score % 100 == 0 && this.score != 0 && this.friendlyGhostSpawned == false) {
-//            FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
-//                    32, 38, xMax, yMax, 5.0f,
-//                    5.0f, 0.9f, 10, this);
-//            createNewEntity(casper);
-//            this.friendlyGhostSpawned = true;
+        this.friendlyGhostSpawned = false;
+        if(this.score % 100 == 0 && this.score != 0 && !this.friendlyGhostSpawned) {
+            setFriendlyGhostSpawned(true);
+            FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
+                    32, 38, xMax, yMax, 5.0f,
+                    5.0f, 0.9f, 10, this);
+            createNewEntity(casper);
 //            if(this.getBall().getHitBox().intersects(casper.getxPosition(), casper.getxPosition() + casper.getHitBox().height(),
 //                    casper.getyPosition(), casper.getyPosition() + casper.getHitBox().width() )) {
 //                casper.update();
 //            }
-//        }
+        }
         if (doubleTapTimer > 0) {
             doubleTapTimer--;
             if (doubleTapTimer == 0) {
@@ -281,6 +281,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         if (!paused) {
             for (Entity e : entityList) {
                 e.update();
+
             }
             for (Entity e : entitiesRemoved) {
                 entityList.remove(e);
@@ -323,6 +324,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public static void setDifficulty(int newDifficulty) {
         difficulty = newDifficulty;
+    }
+
+    public void setFriendlyGhostSpawned(boolean yes) {
+        this.friendlyGhostSpawned = yes;
     }
 
     public FriendlyGhost getFriendlyGhost() {
