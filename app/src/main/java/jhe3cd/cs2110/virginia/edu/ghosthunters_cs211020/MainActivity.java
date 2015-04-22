@@ -268,10 +268,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //            this.friendlyGhostSpawned = true;
 //
 //        }
-       spawnFriendlyGhost();
-        if(this.getFriendlyGhost() != null && this.getBall().getHitBox().intersects(this.getFriendlyGhost().getxPosition(), this.getFriendlyGhost().getxPosition() + this.getFriendlyGhost().getHitBox().height(),
-                this.getFriendlyGhost().getyPosition(), this.getFriendlyGhost().getyPosition() + this.getFriendlyGhost().getHitBox().width() )) {
-            this.getFriendlyGhost().update();
+        if (score % 1000 == 100 && !friendlyGhostSpawned) {
+            FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
+                    32, 38, xMax, yMax, 5.0f,
+                    5.0f, 0.9f, 10, this);
+            createNewEntity(casper);
+            friendlyGhostSpawned = true;
         }
 
         if (doubleTapTimer > 0) {
@@ -287,9 +289,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
         if (!paused) {
             for (Entity e : entityList) {
-                if(!(e instanceof FriendlyGhost)) {
-                    e.update();
-                }
+                e.update();
             }
             for (Entity e : entitiesRemoved) {
                 entityList.remove(e);

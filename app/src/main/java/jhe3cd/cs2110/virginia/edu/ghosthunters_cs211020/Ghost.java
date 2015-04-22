@@ -114,11 +114,11 @@ public class Ghost extends Entity{
     }
 
     public void destroyer(String destroyer) {
-        if (destroyer.equals("ball") && Math.random() > .90) {
+        /*if (destroyer.equals("ball") && Math.random() > .90) {
             main.createNewEntity(new FriendlyGhost(xPosition, yPosition, R.drawable.friendly_ghost,
                     10, hitBox.width(), hitBox.height(), xMax, yMax, xOrigAcceleration,
                     yOrigAcceleration, bounceFactor, 8, main));
-        }
+        }*/
         main.reduceNumGhostsActive(1);
         main.entityRemove(this);
     }
@@ -133,7 +133,7 @@ public class Ghost extends Entity{
             {
                 isColliding = true;
             }
-            if (e instanceof Ball)
+            /*if (e instanceof Ball)
             {
                 if (!main.getBall().isCharged()) {
                 Ball it = (Ball)e;
@@ -173,7 +173,7 @@ public class Ghost extends Entity{
                         break;
                     }
                 }
-            }
+            }*/
         }
         isColliding = collisionArrayList.size() > 1;
     }
