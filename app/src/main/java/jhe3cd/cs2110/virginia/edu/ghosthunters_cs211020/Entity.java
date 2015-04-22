@@ -38,9 +38,10 @@ public abstract class Entity {
         this.xMax = xMax;
         this.yMax = yMax;
         this.centralPoint = new Point(xPosition + (hitBoxWidth/2), yPosition + (hitBoxHeight/2));
-        this.hitBox = new Rect(xPosition, yPosition, xPosition + hitBoxWidth, yPosition + hitBoxHeight);
+
         this.main = main;
-        bmp = decodeSampledBitmapFromResource(main.getResources(), fileID, hitBox.width(), hitBox.height());
+        bmp = decodeSampledBitmapFromResource(main.getResources(), fileID, hitBoxWidth, hitBoxHeight);
+        this.hitBox = new Rect(xPosition, yPosition, xPosition + bmp.getWidth(), yPosition + bmp.getHeight());
     }
 
     public abstract void update();
@@ -66,11 +67,6 @@ public abstract class Entity {
         }
         return collisionArrayList;
     }
-
-    public boolean intersection(Rect a, Rect b) {
-        return (a.left < b.right && b.left < a.right) && (a.top < b.bottom && b.top < a.bottom);
-    }
-
 
     public void draw(Canvas canvas, Paint paint) {
         canvas.drawBitmap(bmp, xPosition, yPosition, paint);
