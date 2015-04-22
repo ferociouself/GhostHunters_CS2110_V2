@@ -248,6 +248,16 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
     }
 
+    public void spawnFriendlyGhost() {
+        if (score % 1000 == 0 && !friendlyGhostSpawned && this.score != 0) {
+            FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
+                    32, 38, xMax, yMax, 5.0f,
+                    5.0f, 0.9f, 10, this);
+            createNewEntity(casper);
+            friendlyGhostSpawned = true;
+        }
+    }
+
     private void update() {
 //        this.friendlyGhostSpawned = false;
 //        if(this.score % 100 == 0 && this.score != 0 && this.friendlyGhostSpawned == false) {
@@ -256,18 +266,14 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //                    5.0f, 0.9f, 10, this);
 //            createNewEntity(casper);
 //            this.friendlyGhostSpawned = true;
-//            if(this.getBall().getHitBox().intersects(casper.getxPosition(), casper.getxPosition() + casper.getHitBox().height(),
-//                    casper.getyPosition(), casper.getyPosition() + casper.getHitBox().width() )) {
-//                casper.update();
-//            }
+//
 //        }
-        if (score % 1000 == 0 && !friendlyGhostSpawned) {
-            FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
-                    32, 38, xMax, yMax, 5.0f,
-                    5.0f, 0.9f, 10, this);
-            createNewEntity(casper);
-            friendlyGhostSpawned = true;
+       spawnFriendlyGhost();
+        if(this.getFriendlyGhost() != null && this.getBall().getHitBox().intersects(this.getFriendlyGhost().getxPosition(), this.getFriendlyGhost().getxPosition() + this.getFriendlyGhost().getHitBox().height(),
+                this.getFriendlyGhost().getyPosition(), this.getFriendlyGhost().getyPosition() + this.getFriendlyGhost().getHitBox().width() )) {
+            this.getFriendlyGhost().update();
         }
+
         if (doubleTapTimer > 0) {
             doubleTapTimer--;
             if (doubleTapTimer == 0) {
@@ -281,7 +287,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
         if (!paused) {
             for (Entity e : entityList) {
-                e.update();
+                if(!(e instanceof FriendlyGhost)) {
+                    e.update();
+                }
             }
             for (Entity e : entitiesRemoved) {
                 entityList.remove(e);
