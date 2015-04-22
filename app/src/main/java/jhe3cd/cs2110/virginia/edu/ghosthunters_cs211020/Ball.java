@@ -114,17 +114,28 @@ public class Ball extends Entity{
         collisionArrayList.addAll(collisionDetect(main.getEntityList()));
 
         for (Entity e : collisionArrayList) {
-            if (e instanceof Ghost && isCharged) {
-                Log.i("BALL", "Ghost collided with");
-                e.destroyer(DESTROYER_ID);
-                main.incScore(100);
-            }
-
-            else if (e instanceof Ghost && !isCharged && this.getItemStored().getItemID().equals("shield"))
-            {
-                Log.i("BALL", "Ghost collided with");
-                e.destroyer(DESTROYER_ID);
-                main.incScore(100);
+            if (e instanceof Ghost && !(e instanceof FriendlyGhost)) {
+                if (isCharged) {
+                    Log.i("BALL", "Ghost collided with");
+                    e.destroyer(DESTROYER_ID);
+                    main.incScore(100);
+                } else if (!isCharged && this.getItemStored() != null) {
+                    if (this.getItemStored().getItemID().equals("shield")) {
+                        Log.i("BALL", "Ghost collided with");
+                        e.destroyer(DESTROYER_ID);
+                        main.incScore(100);
+                    }
+                } else if (!isCharged) {
+                    if (MainActivity.getDifficulty() == 2) {
+                        incHealth(-60);
+                        e.destroyer(DESTROYER_ID);
+                        break;
+                    } else {
+                        incHealth(-30);
+                        e.destroyer(DESTROYER_ID);
+                        break;
+                    }
+                }
             }
 
             else if (e instanceof Item)

@@ -261,7 +261,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 //                casper.update();
 //            }
 //        }
-        if (score % 1000 == 0 && !friendlyGhostSpawned) {
+        if (score % 1000 == 100 && !friendlyGhostSpawned) {
             FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
                     32, 38, xMax, yMax, 5.0f,
                     5.0f, 0.9f, 10, this);
