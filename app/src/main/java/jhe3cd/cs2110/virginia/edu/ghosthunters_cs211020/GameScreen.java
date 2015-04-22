@@ -18,7 +18,7 @@ public class GameScreen extends ActionBarActivity {
 
     public void play(View view){
         if(view.getId()== R.id.button10){
-            Intent in = new Intent(this, SplashActivity.class);
+            Intent in = new Intent(this, BeginActivity.class);
             this.startActivity(in);
             this.finish();
         }
