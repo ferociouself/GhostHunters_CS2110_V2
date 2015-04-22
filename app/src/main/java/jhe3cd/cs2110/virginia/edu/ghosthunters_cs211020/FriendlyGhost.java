@@ -137,8 +137,6 @@ public class FriendlyGhost extends Ghost{
                 }
             }
         }
-
-
         return currPoint;
     }
 
