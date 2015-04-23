@@ -81,7 +81,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private int numGhostsSpawned = 4;
     private int numGhostsActive = 4;
     private int score;
-    private boolean friendlyGhostSpawned;
+    private boolean friendlyGhostSpawned = false;
 
     private int timeCounter = 0;
 
@@ -249,19 +249,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
     private void update() {
-//        this.friendlyGhostSpawned = false;
-//        if(this.score % 100 == 0 && this.score != 0 && this.friendlyGhostSpawned == false) {
-//            FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
-//                    32, 38, xMax, yMax, 5.0f,
-//                    5.0f, 0.9f, 10, this);
-//            createNewEntity(casper);
-//            this.friendlyGhostSpawned = true;
-//            if(this.getBall().getHitBox().intersects(casper.getxPosition(), casper.getxPosition() + casper.getHitBox().height(),
-//                    casper.getyPosition(), casper.getyPosition() + casper.getHitBox().width() )) {
-//                casper.update();
-//            }
-//        }
-        if (score % 1000 == 0 && !friendlyGhostSpawned) {
+        if (score % 1000 == (difficulty * 400) && !friendlyGhostSpawned) {
             FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
                     32, 38, xMax, yMax, 5.0f,
                     5.0f, 0.9f, 10, this);
@@ -270,11 +258,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         }
         if (doubleTapTimer > 0) {
             doubleTapTimer--;
-            if (doubleTapTimer == 0) {
-//                createNewEntity(new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
-//                        32, 38, xMax, yMax, 5.0f,
-//                        5.0f, 0.9f, 10, this));
-            }
         }
         if (doubleTapTimer == 0) {
             doubleTapTriggered = false;

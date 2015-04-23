@@ -13,7 +13,6 @@ public class Item extends Entity
 
     protected TreeMap <String,Integer> itemFrequency = new TreeMap <String,Integer>();
     protected ArrayList <String> randomList = new ArrayList<String>();
-    protected HashMap<String, Integer> fileIDMap = new HashMap<>();
 
     public void activate() {
         activated = true;
@@ -25,15 +24,11 @@ public class Item extends Entity
     public Item(String itemID, double duration, int fileID, int xPosition, int yPosition, int xMax, int yMax,
                 int hitBoxWidth, int hitBoxHeight, MainActivity main)
     {
-
-
         super(fileID,xPosition, yPosition, xMax, yMax,hitBoxWidth,hitBoxHeight, main);
         randomlyGenerate();
         this.itemID = itemID;
         this.duration = duration;
         activated = false;
-
-        fileIDMap.put("shield", R.drawable.shield);
 
         itemFrequency.put("shield",30);
         itemFrequency.put("timeFreezer",15);
@@ -78,8 +73,6 @@ public class Item extends Entity
        int index = (int)Math.random()*randomList.size();
        return randomList.get(index);
     }
-
-
 
 
 }
