@@ -29,7 +29,9 @@ public class RayGun extends Item {
         if(this.ray != null) {
             ray.update();
         }
-        this.duration -= main.FRAME_TIME;
+        if(main.getBall().getItemStored().equals(this)) {
+            this.duration -= main.FRAME_TIME;
+        }
         this.terminate();
     }
 
@@ -39,8 +41,8 @@ public class RayGun extends Item {
     }
 
     public void terminate() {
-        if(this.duration <= 0) {
-            main.entityRemove(this);
+        if((this.duration * 100) <= 0) {
+            main.getBall().setItemStored(null);
         }
     }
 }

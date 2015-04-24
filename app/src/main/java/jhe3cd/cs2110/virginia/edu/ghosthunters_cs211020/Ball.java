@@ -154,8 +154,8 @@ public class Ball extends Entity{
                         timeFrozen = 20;
                         this.setItemStored(null);
                         break;
-                    case "rayGun":
-                        break;
+//                    case "rayGun":
+//                        break;
 
                     default:
                         break;
