@@ -74,5 +74,7 @@ public class Item extends Entity
        return randomList.get(index);
     }
 
-
+    public double getDuration() {
+        return duration;
+    }
 }

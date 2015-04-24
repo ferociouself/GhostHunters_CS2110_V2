@@ -19,7 +19,7 @@ public class FriendlyGhost extends Ghost{
     public FriendlyGhost(int xPosition, int yPosition, int fileID, int health,
                          int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration,
                          float yAcceleration, float bounceFactor, int lifeSpan, MainActivity main) {
-        super(xPosition, yPosition, fileID, null, null, health, hitBoxWidth, hitBoxHeight, xMax,
+        super(xPosition, yPosition, fileID, null, health, hitBoxWidth, hitBoxHeight, xMax,
                 yMax, xAcceleration, yAcceleration, bounceFactor, main);
         this.lifeSpan = lifeSpan;
         this.defaultTarget = new Point(xMax/2, yMax/2);
@@ -65,7 +65,6 @@ public class FriendlyGhost extends Ghost{
 
         for (Entity e : collisionArrayList) {
             if (e instanceof Ghost && !(e instanceof FriendlyGhost)) {
-                Log.i("friendlyGhost", "Ghost collided with");
                 e.destroyer(DESTROYER_ID);
                 main.incScore(50);
             }

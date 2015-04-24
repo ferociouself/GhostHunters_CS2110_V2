@@ -32,6 +32,8 @@ public class Ball extends Entity{
 
     private int timeFrozen = 0;
 
+    private int itemDurationCounter = 0;
+
     public Ball (int fileID, int xPosition, int yPosition, float speedMod,
                  int xMax, int yMax, int hitBoxWidth, int hitBoxHeight, float bounceFactor,
                  int health, MainActivity main) {
@@ -98,6 +100,12 @@ public class Ball extends Entity{
         if(timeFrozen == 0)
             freezeGhosts(false);
 
+        if (itemDurationCounter == 0) {
+            setItemStored(null);
+        } else {
+            itemDurationCounter--;
+        }
+
         if (health == 0) {
             destroyer(DESTROYER_ID);
         }
@@ -120,23 +128,21 @@ public class Ball extends Entity{
         for (Entity e : collisionArrayList) {
             if (e instanceof Ghost && !(e instanceof FriendlyGhost)) {
                 if (isCharged) {
-                    Log.i("BALL", "Ghost collided with");
                     e.destroyer(DESTROYER_ID);
                     main.incScore(100);
                 } else if (!isCharged && this.getItemStored() != null) {
                     if (this.getItemStored().getItemID().equals("shield")) {
-                        Log.i("BALL", "Ghost collided with");
                         e.destroyer(DESTROYER_ID);
                         main.incScore(100);
                     }
                 } else if (!isCharged) {
                     if (MainActivity.getDifficulty() == 2) {
                         incHealth(-60);
-                        e.destroyer(DESTROYER_ID);
+                        e.destroyer(DESTROYER_ID + "hurt");
                         break;
                     } else {
                         incHealth(-30);
-                        e.destroyer(DESTROYER_ID);
+                        e.destroyer(DESTROYER_ID + "hurt");
                         break;
                     }
                 }
@@ -147,6 +153,8 @@ public class Ball extends Entity{
                 Item it = (Item) e;
 
                 this.setItemStored(it);
+                e.destroyer(DESTROYER_ID);
+                itemDurationCounter = (int) ((Item) e).getDuration();
                 switch(it.getItemID())
                 {
                     case "extraHealth":
@@ -242,5 +250,9 @@ public class Ball extends Entity{
                 g.setFrozen(b);
             }
         }
+    }
+
+    public void deactivateItem() {
+        setItemStored(null);
     }
 }

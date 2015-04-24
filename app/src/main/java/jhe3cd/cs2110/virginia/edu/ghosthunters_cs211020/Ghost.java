@@ -3,6 +3,8 @@ package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 import android.graphics.Point;
 
 import java.util.ArrayList;
+import java.util.Random;
+
 import android.graphics.*;
 import android.util.Log;
 
@@ -28,16 +30,15 @@ public class Ghost extends Entity{
     private boolean ballCharged;
     private boolean frozen;
     protected float bounceFactor = 0.0f;
-    private MainActivity.CustomDrawableView c ;
 
     private Ghost collidingGhost = null;
 
-    public Ghost(int xPosition, int yPosition, int fileID, Point target, Item booty, int health,
+    public Ghost(int xPosition, int yPosition, int fileID, Point target, int health,
                  int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration,
                  float yAcceleration, float bounceFactor, MainActivity main) {
         super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
         this.target = target;
-        this.booty = booty;
+        getRandomItem();
         this.health = health;
         this.xVelocity = 0;
         this.yVelocity = 0;
@@ -114,7 +115,9 @@ public class Ghost extends Entity{
     }
 
     public void destroyer(String destroyer) {
-        main.reduceNumGhostsActive(1);
+        if (booty != null && destroyer.equals("friendlyGhost")) {
+            //main.createNewEntity(booty);
+        }
         main.entityRemove(this);
     }
 
@@ -140,7 +143,16 @@ public class Ghost extends Entity{
         yPosition = (int) (Math.random() * yMax);
     }
 
+    private void getRandomItem() {
+        Random rand1 = new Random();
+        Random rand2 = new Random();
 
+        if(rand1.nextFloat() < .01) booty = new Item(main.SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main);
+        else if(rand1.nextFloat() < .02 && rand1.nextFloat() >= 0.01) booty = new Item(main.EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main);
+        else if(rand1.nextFloat() < .03 && rand1.nextFloat() >= 0.02) booty = new Item(main.TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main);
+        else if(rand1.nextFloat() < .04 && rand1.nextFloat() >= 0.03) booty = new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main);
+        else booty = null;
+    }
 
     public float getxVelocity() {
         return xVelocity;

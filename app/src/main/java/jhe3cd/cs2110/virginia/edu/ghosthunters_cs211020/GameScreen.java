@@ -1,5 +1,6 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,12 +12,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 
-public class GameScreen extends ActionBarActivity {
+public class GameScreen extends Activity {
 
     private static int score = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
