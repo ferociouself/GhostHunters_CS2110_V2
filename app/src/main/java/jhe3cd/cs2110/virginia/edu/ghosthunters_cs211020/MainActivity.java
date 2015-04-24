@@ -104,7 +104,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        customDrawView = new CustomDrawableView(this, this);
+        customDrawView = new CustomDrawableView(this);
         setContentView(customDrawView);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -253,6 +253,14 @@ public class MainActivity extends Activity implements SensorEventListener {
             doubleTapTriggered = false;
         }
         if (!paused) {
+            Random rand1 = new Random();
+            Random rand2 = new Random();
+
+            if(rand1.nextFloat() < .0001) entityList.add(new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
+            if(rand1.nextFloat() < .0002 && rand1.nextFloat() >= 0.0001) entityList.add(new Item(EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
+            if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new Item(TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
+            if(rand1.nextFloat() < .0004 && rand1.nextFloat() >= 0.0003) entityList.add(new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
+
             if (score % 1000 == (difficulty * 400) && !friendlyGhostSpawned) {
                 FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
                         32, 38, xMax, yMax, 5.0f,
@@ -336,11 +344,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
     public class CustomDrawableView extends View {
 
-        MainActivity main;
-
-        public CustomDrawableView(Context context, MainActivity main) {
+        public CustomDrawableView(Context context) {
             super(context);
-            this.main = main;
 
         }
 
@@ -360,13 +365,6 @@ public class MainActivity extends Activity implements SensorEventListener {
                 canvas.drawRect(initHealthX - 10, 40, initHealthX + ball.getMaxHealth() + 10, 110, barBGPaint);
                 canvas.drawRect(initHealthX, 50, healthX, 100, healthPaint);
                 canvas.drawText("Score: " + score, xMax - 250, yMax - 50, wordPaint);
-                Random rand1 = new Random();
-                Random rand2 = new Random();
-
-                if(rand1.nextFloat() < .0001) entityList.add(new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
-                if(rand1.nextFloat() < .0002 && rand1.nextFloat() >= 0.0001) entityList.add(new Item(EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
-                if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new Item(TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
-                if(rand1.nextFloat() < .004 && rand1.nextFloat() >= 0.003) entityList.add(new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
 
                 for (Entity e : entityList) {
                     e.draw(canvas, genericPaint);
