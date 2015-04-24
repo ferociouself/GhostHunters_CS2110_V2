@@ -49,7 +49,6 @@ public class Ghost extends Entity{
         this.ballCharged = false;
         this.frozen = false;
         this.main = main;
-     //   this.c = new MainActivity.CustomDrawableView();
     }
 
     public void update()
@@ -62,7 +61,6 @@ public class Ghost extends Entity{
             handleCollisions();
             if(ballTouching && !(ballCharged || frozen)) {
                 if (collidingGhost != null) {
-                    Log.e("Ghost", "I collided with a ghost!");
                     xDynAcceleration = -((float) (collidingGhost.centralPoint.x - centralPoint.x) / (float) xMax) * (3 * xOrigAcceleration);
                     yDynAcceleration = -((float) (collidingGhost.centralPoint.y - centralPoint.y) / (float) yMax) * (3 * yOrigAcceleration);
                 } else {
@@ -116,11 +114,6 @@ public class Ghost extends Entity{
     }
 
     public void destroyer(String destroyer) {
-        /*if (destroyer.equals("ball") && Math.random() > .90) {
-            main.createNewEntity(new FriendlyGhost(xPosition, yPosition, R.drawable.friendly_ghost,
-                    10, hitBox.width(), hitBox.height(), xMax, yMax, xOrigAcceleration,
-                    yOrigAcceleration, bounceFactor, 8, main));
-        }*/
         main.reduceNumGhostsActive(1);
         main.entityRemove(this);
     }
@@ -140,39 +133,6 @@ public class Ghost extends Entity{
             }
         }
     }
-
-//    public void handleGhostToGhostCollision() {
-//        Ghost ghost1 =
-//        for(Entity e : main.getEntityList()) {
-//            if(e instanceof Ghost) {
-//                Ghost ghost1 = (Ghost) e;
-//            }
-//            for(Entity i : main.getEntityList()) {
-//                if(i instanceof Ghost) {
-//                    Ghost ghost2 = (Ghost) i;
-//                    if(ghost1.getHitbox().intersects(zombie2.getHitbox()) == true) {
-//                        Rectangle intersection = zombie1.getHitbox().intersection(zombie2.getHitbox());
-//                        if(intersection.height > intersection.width) {
-//                            if(zombie1.getX() > zombie2.getX()) {
-//                                zombie1.setX(zombie1.getX() + intersection.width/4);
-//                            }
-//                            if(zombie1.getX() < zombie2.getX()) {
-//                                zombie1.setX(zombie1.getX() - intersection.width/4);
-//                            }
-//                        }
-//                        if(intersection.width > intersection.height) {
-//                            if(zombie1.getY() > zombie2.getY()) {
-//                                zombie1.setY(zombie1.getY() + intersection.height/4);
-//                            }
-//                            if(zombie1.getY() < zombie2.getY()) {
-//                                zombie1.setY(zombie1.getY() - intersection.height/4);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     public void randomlyGenerate()
     {
