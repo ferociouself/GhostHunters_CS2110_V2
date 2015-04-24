@@ -19,7 +19,7 @@ import android.widget.ImageView;
 public class SplashActivity extends Activity{
 
     private static String TAG = SplashActivity.class.getName();
-    private static long SLEEP_TIME = 8;
+    private static long SLEEP_TIME = 1;
 
     private static final int SPLASH_REDUCER_WIDTH = 250;
     private static final int SPLASH_REDUCER_HEIGHT = 250;

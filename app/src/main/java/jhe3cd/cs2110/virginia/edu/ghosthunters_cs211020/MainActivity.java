@@ -200,7 +200,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         } else if (action == MotionEvent.ACTION_DOWN) {
             ball.setTouching(true);
             doubleTapTriggered = true;
-            doubleTapTimer = 30;
+            doubleTapTimer = 10;
         } else if (action == MotionEvent.ACTION_UP) {
             ball.setTouching(false);
         }
@@ -259,7 +259,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             if(rand1.nextFloat() < .0001) entityList.add(new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
             if(rand1.nextFloat() < .002 && rand1.nextFloat() >= 0.001) entityList.add(new Item(EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
             if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new Item(TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
-            if(rand1.nextFloat() < .0004 && rand1.nextFloat() >= 0.0003) entityList.add(new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
+            if(rand1.nextFloat() < .0004 && rand1.nextFloat() >= 0.0003) entityList.add(new RayGun(300, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
 
             if (score % 1000 == (difficulty * 400) && !friendlyGhostSpawned) {
                 FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
@@ -367,7 +367,11 @@ public class MainActivity extends Activity implements SensorEventListener {
                 canvas.drawText("Score: " + score, xMax - 250, yMax - 50, wordPaint);
 
                 for (Entity e : entityList) {
-                    e.draw(canvas, genericPaint);
+                    if (e != ball) {
+                        e.draw(canvas, genericPaint);
+                    } else {
+                        e.draw(canvas, ball.getPaint());
+                    }
                 }
             } else {
                 update();

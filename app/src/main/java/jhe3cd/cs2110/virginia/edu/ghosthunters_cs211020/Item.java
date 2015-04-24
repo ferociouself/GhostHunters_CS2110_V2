@@ -26,7 +26,6 @@ public class Item extends Entity
                 int hitBoxWidth, int hitBoxHeight, MainActivity main)
     {
         super(fileID,xPosition, yPosition, xMax, yMax,hitBoxWidth,hitBoxHeight, main);
-        randomlyGenerate();
         this.itemID = itemID;
         this.duration = duration;
         activated = false;

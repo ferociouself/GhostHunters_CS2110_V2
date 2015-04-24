@@ -19,8 +19,8 @@ public class Ray extends Entity {
                int hitBoxWidth, int hitBoxHeight, MainActivity main, Point target) {
         super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
         this.target = target;
-        this.xVelocity = (target.x - main.getBall().getCentralPoint().x)/100;
-        this.yVelocity = (target.y - main.getBall().getCentralPoint().y)/100;
+        this.xVelocity = (target.x - main.getBall().getCentralPoint().x)/50;
+        this.yVelocity = (target.y - main.getBall().getCentralPoint().y)/50;
     }
 
     public void update() {

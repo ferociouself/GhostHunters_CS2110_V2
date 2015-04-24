@@ -3,6 +3,7 @@ package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 import android.app.usage.UsageEvents;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.MotionEvent;
 
 /**
@@ -20,10 +21,12 @@ public class RayGun extends Item {
     }
 
     public void updateTouch(float xPos, float yPos) {
+        Log.i("RayGun", "Spawning Ray towards " + xPos + ", " + yPos);
         Point target = new Point((int) xPos, (int) yPos);
         main.createNewEntity(new Ray(R.drawable.ray, main.getBall().getCentralPoint().x, main.getBall().getCentralPoint().y, this.xMax, this.yMax,
                 25, 25, main, target));
         }
+
 
     public void update() {
 //        if(this.ray != null) {
