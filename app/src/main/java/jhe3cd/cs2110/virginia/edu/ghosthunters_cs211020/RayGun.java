@@ -26,25 +26,25 @@ public class RayGun extends Item {
         }
 
     public void update() {
-        if(this.ray != null) {
-            ray.update();
-        }
-        if(main.getBall().getItemStored().equals(this)) {
-            this.duration -= main.FRAME_TIME;
-        }
-        this.terminate();
+//        if(this.ray != null) {
+//            ray.update();
+//        }
+//        if(main.getBall().getItemStored() != null && main.getBall().getItemStored().equals(this)) {
+//            this.duration -= main.FRAME_TIME;
+//        }
+//        this.terminate();
     }
 
-    @Override
-    public void activate() {
-        main.getBall().setItemStored(this);
-        super.activate();
-    }
-
-    @Override
-    public void terminate() {
-        if((this.duration * 100) <= 0) {
-            main.getBall().setItemStored(null);
-        }
-    }
+//    @Override
+//    public void activate() {
+//        main.getBall().setItemStored(this);
+//        super.activate();
+//    }
+//
+//    @Override
+//    public void terminate() {
+//        if((this.duration * 100) <= 0) {
+//            main.getBall().setItemStored(null);
+//        }
+//    }
 }

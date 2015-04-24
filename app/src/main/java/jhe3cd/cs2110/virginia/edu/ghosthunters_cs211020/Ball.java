@@ -152,7 +152,7 @@ public class Ball extends Entity{
             {
                 Item it = (Item) e;
                 this.setItemStored(it);
-                e.destroyer(DESTROYER_ID);
+                it.destroyer(DESTROYER_ID);
                 itemDurationCounter = (int) ((Item) e).getDuration();
                 switch(it.getItemID())
                 {

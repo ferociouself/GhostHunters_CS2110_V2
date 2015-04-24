@@ -366,7 +366,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 if(rand1.nextFloat() < .0001) entityList.add(new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
                 if(rand1.nextFloat() < .0002 && rand1.nextFloat() >= 0.0001) entityList.add(new Item(EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
                 if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new Item(TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
-                if(rand1.nextFloat() < .0004 && rand1.nextFloat() >= 0.0003) entityList.add(new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
+                if(rand1.nextFloat() < .004 && rand1.nextFloat() >= 0.003) entityList.add(new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
 
                 for (Entity e : entityList) {
                     e.draw(canvas, genericPaint);

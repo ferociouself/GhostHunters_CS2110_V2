@@ -1,5 +1,6 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.util.*;
 /**
@@ -57,7 +58,7 @@ public class Item extends Entity
     {
 
         if (destroyer.equals(main.getBall().DESTROYER_ID)){
-            main.getBall().setItemStored(this);
+            Log.i("Item", "Ball broke me");
         }
         main.entityRemove(this);
     }
