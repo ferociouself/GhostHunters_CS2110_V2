@@ -256,10 +256,10 @@ public class MainActivity extends Activity implements SensorEventListener {
             Random rand1 = new Random();
             Random rand2 = new Random();
 
-            if(rand1.nextFloat() < .0001) entityList.add(new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
-            if(rand1.nextFloat() < .0002 && rand1.nextFloat() >= 0.0001) entityList.add(new Item(EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
-            if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new Item(TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
-            if(rand1.nextFloat() < .0004 && rand1.nextFloat() >= 0.0003) entityList.add(new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
+            if(rand1.nextFloat() < .0001) entityList.add(new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, this));
+            if(rand1.nextFloat() < .0002 && rand1.nextFloat() >= 0.0001) entityList.add(new Item(EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, this));
+            if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new Item(TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, this));
+            if(rand1.nextFloat() < .0004 && rand1.nextFloat() >= 0.0003) entityList.add(new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 40, 40, this));
 
             if (score % 1000 == (difficulty * 400) && !friendlyGhostSpawned) {
                 FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
@@ -393,10 +393,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         public void chargerSensor() {
             if (ball.isCharged()) {
-                ballPaint.setColorFilter(cFilter);
+                ball.filterChanger(cFilter);
                 if (chargerX < initChargerX + 10) {
                     ball.setCharged(false);
-                    ballPaint.setColorFilter(null);
+                    ball.filterChanger(null);
                 } else {
                     if (miniChargerCounter >= CHARGER_DECAY_RATE - difficulty) {
                         chargerX--;
