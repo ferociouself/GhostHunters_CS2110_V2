@@ -26,9 +26,10 @@ public class RayGun extends Item {
         }
 
     public void update() {
-        ray.update();
-
-        if(main.getBall().getItemStored() != null && main.getBall().getItemStored().equals(this)) {
+        if(this.ray != null) {
+            ray.update();
+        }
+        if(main.getBall().getItemStored().equals(this)) {
             this.duration -= main.FRAME_TIME;
         }
         this.terminate();

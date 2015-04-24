@@ -1,5 +1,6 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.gesture.GestureOverlayView;
@@ -25,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import java.util.*;
 
@@ -35,7 +37,7 @@ import java.util.*;
  * Xiaowei Wu: xw8uv
  */
 
-public class MainActivity extends ActionBarActivity implements SensorEventListener {
+public class MainActivity extends Activity implements SensorEventListener {
 
     CustomDrawableView customDrawView = null;
     private int xMax, yMax;
@@ -78,9 +80,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     private ArrayList<Entity> entityList = new ArrayList<>();
     private ArrayList<Entity> entitiesRemoved = new ArrayList<>();
+    private ArrayList<Entity> entitiesAdded = new ArrayList<>();
 
     private int numGhostsSpawned = 4;
-    private int numGhostsActive = 4;
     private int score;
     private boolean friendlyGhostSpawned = false;
 
@@ -95,10 +97,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     private boolean paused = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        customDrawView = new CustomDrawableView(this, this);
+        setContentView(customDrawView);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -109,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         size = new Point();
         display.getSize(size);
         xMax = (int) (size.x * 0.94);
-        yMax = (int)(size.y * 0.80);
+        yMax = size.y;
 
         initHealthX = xMax - 400;
 
@@ -119,8 +126,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         score = 0;
 
-        customDrawView = new CustomDrawableView(this, this);
-        setContentView(customDrawView);
+
     }
 
     public void setPaints() {
@@ -159,7 +165,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
         boolean worked = entityList.add(ball);
 
         for (int i = 0; i < numGhostsSpawned; i++) {
-            Ghost tempGh = new Ghost(0, 0, R.drawable.ghost, ball.getCentralPoint(), null, 1, 32,
+            Ghost tempGh = new Ghost(0, 0, R.drawable.ghost, ball.getCentralPoint(), 1, 32,
                     38, xMax, yMax, 5.0f, 5.0f, 0.9f, this);
             tempGh.randomlyGenerate();
             entityList.add(tempGh);
@@ -172,25 +178,15 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
     public void spawnNewGhosts() {
         for (int i = 0; i < numGhostsSpawned; i++) {
-            Ghost tempGh= new Ghost(0, 0, R.drawable.ghost, ball.getCentralPoint(), null, 1, 32,
+            Ghost tempGh= new Ghost(0, 0, R.drawable.ghost, ball.getCentralPoint(), 1, 32,
                     38, xMax, yMax, 5.0f, 5.0f, 0.9f, this);
             tempGh.randomlyGenerate();
             createNewEntity(tempGh);
-            numGhostsActive++;
         }
     }
 
     public void createNewEntity(Entity e) {
         entityList.add(e);
-    }
-
-    public void reduceNumGhostsActive(int i) {
-        numGhostsActive -= i;
-    }
-
-    public Item getRandomItem() {
-        // TODO Add ability to get random items from a list of items.
-        return null;
     }
 
     @Override
@@ -270,6 +266,9 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             for (Entity e : entitiesRemoved) {
                 entityList.remove(e);
             }
+            for (Entity e : entitiesAdded) {
+                entityList.add(e);
+            }
             entitiesRemoved.clear();
             healthX = initHealthX + ball.getHealth();
             if (timeCounter == 500) {
@@ -335,44 +334,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     public void setFriendlyGhostSpawned(boolean friendlyGhostSpawned) {
         this.friendlyGhostSpawned = friendlyGhostSpawned;
     }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }*/
-
-        /* @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            // Handle action bar item clicks here. The action bar will
-            // automatically handle clicks on the Home/Up button, so long
-            // as you specify a parent activity in AndroidManifest.xml.
-            int id = item.getItemId();
-
-            //noinspection SimplifiableIfStatement
-            if (id == R.id.action_settings) {
-                return true;
-            }
-
-            return super.onOptionsItemSelected(item);
-        } */
     public class CustomDrawableView extends View {
-        private Bitmap ballBMP;
-
-        private int chargerBarHeight;
-        private int chargerBarWidth;
 
         MainActivity main;
 
         public CustomDrawableView(Context context, MainActivity main) {
             super(context);
-            /*Bitmap ballBMP = BitmapFactory.decodeResource(getResources(), R.drawable.ball);
-            final int dstWidth = BALL_WIDTH;
-            final int dstHeight = BALL_HEIGHT;
-            mainBitmap = Bitmap.createScaledBitmap(ballBMP, dstWidth, dstHeight, true);*/
-            /*ballBMP = decodeSampledBitmapFromResource(getResources(), R.drawable.ball,
-                    BALL_WIDTH, BALL_HEIGHT);*/
             this.main = main;
 
         }
@@ -399,7 +366,7 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
                 if(rand1.nextFloat() < .0001) entityList.add(new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
                 if(rand1.nextFloat() < .0002 && rand1.nextFloat() >= 0.0001) entityList.add(new Item(EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
                 if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new Item(TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
-                if(rand1.nextFloat() < .004 && rand1.nextFloat() >= 0.003) entityList.add(new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
+                if(rand1.nextFloat() < .0004 && rand1.nextFloat() >= 0.0003) entityList.add(new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main));
 
                 for (Entity e : entityList) {
                     e.draw(canvas, genericPaint);
@@ -428,14 +395,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
 
         public void chargerSensor() {
             if (ball.isCharged()) {
-                if (ballPaint.getColorFilter() == null) {
-                    ballPaint.setColorFilter(cFilter);
-                }
+                ballPaint.setColorFilter(cFilter);
                 if (chargerX < initChargerX + 10) {
                     ball.setCharged(false);
                     ballPaint.setColorFilter(null);
                 } else {
-                    if (miniChargerCounter >= 3 - difficulty) {
+                    if (miniChargerCounter >= CHARGER_DECAY_RATE - difficulty) {
                         chargerX--;
                         miniChargerCounter = 0;
                     } else {
