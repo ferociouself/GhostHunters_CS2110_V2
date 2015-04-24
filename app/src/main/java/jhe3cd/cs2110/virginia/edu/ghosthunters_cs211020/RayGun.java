@@ -35,11 +35,13 @@ public class RayGun extends Item {
         this.terminate();
     }
 
+    @Override
     public void activate() {
         main.getBall().setItemStored(this);
         super.activate();
     }
 
+    @Override
     public void terminate() {
         if((this.duration * 100) <= 0) {
             main.getBall().setItemStored(null);
