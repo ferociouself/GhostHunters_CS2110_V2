@@ -145,7 +145,6 @@ public class Ball extends Entity{
             else if (e instanceof Item)
             {
                 Item it = (Item) e;
-
                 this.setItemStored(it);
                 switch(it.getItemID())
                 {
@@ -158,8 +157,8 @@ public class Ball extends Entity{
                         timeFrozen = 20;
                         this.setItemStored(null);
                         break;
-//                    case "rayGun":
-//                        break;
+                    case "rayGun":
+                        break;
 
                     default:
                         break;
