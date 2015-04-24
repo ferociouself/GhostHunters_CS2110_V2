@@ -5,6 +5,18 @@
     android:background="@color/material_blue_grey_800"
     >
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Game Over"
+        android:id="@+id/textView3"
+        android:textColor="#ffffffff"
+        android:textSize="@dimen/abc_action_bar_progress_bar_size"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,19 +27,6 @@
         android:layout_below="@+id/textView3"
         android:onClick="play"
        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Game Over"
-        android:id="@id/textView3"
-        android:textColor="#ffffffff"
-        android:textSize="@dimen/abc_action_bar_progress_bar_size"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-         />
-
 
     <View
         android:layout_width="wrap_content"

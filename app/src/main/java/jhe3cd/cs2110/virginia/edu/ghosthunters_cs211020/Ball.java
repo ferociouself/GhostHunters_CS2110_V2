@@ -147,10 +147,12 @@ public class Ball extends Entity{
                 {
                     case "extraHealth":
                         this.incHealth(30);
+                        this.setItemStored(null);
                         break;
                     case "timeFrozen":
                         freezeGhosts(true);
                         timeFrozen = 20;
+                        this.setItemStored(null);
                         break;
                     case "rayGun":
                         break;

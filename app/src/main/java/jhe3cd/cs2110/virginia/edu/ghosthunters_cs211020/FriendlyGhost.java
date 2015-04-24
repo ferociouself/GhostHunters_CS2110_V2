@@ -12,7 +12,6 @@ public class FriendlyGhost extends Ghost{
 
     private static final String DESTROYER_ID = "friendlyGhost";
 
-    private boolean isFriendly;
     int lifeSpan;
     long timeActive;
     private Point defaultTarget;
@@ -22,7 +21,6 @@ public class FriendlyGhost extends Ghost{
                          float yAcceleration, float bounceFactor, int lifeSpan, MainActivity main) {
         super(xPosition, yPosition, fileID, null, null, health, hitBoxWidth, hitBoxHeight, xMax,
                 yMax, xAcceleration, yAcceleration, bounceFactor, main);
-        this.isFriendly = true;
         this.lifeSpan = lifeSpan;
         this.defaultTarget = new Point(xMax/2, yMax/2);
         setTarget(findNearestGhostCenter());
