@@ -97,6 +97,10 @@ public class Ball extends Entity{
             timeFrozen--;
         if(timeFrozen == 0)
             freezeGhosts(false);
+
+        if (health == 0) {
+            destroyer(DESTROYER_ID);
+        }
     }
 
     public void destroyer(String destroyer) {

@@ -6,14 +6,24 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 
 public class GameScreen extends ActionBarActivity {
 
+    private static int score = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.game_over);
+        TextView tView = (TextView) findViewById(R.id.scoreDisplay);
+        tView.append("" + score);
     }
 
     public void play(View view){
@@ -23,6 +33,10 @@ public class GameScreen extends ActionBarActivity {
             this.finish();
         }
 
+    }
+
+    public static void setScore(int newScore) {
+        score = newScore;
     }
 
 }

@@ -1,6 +1,7 @@
 package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
 import android.content.Context;
+import android.content.Intent;
 import android.gesture.GestureOverlayView;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -249,13 +250,6 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
     private void update() {
-        if (score % 1000 == (difficulty * 400) && !friendlyGhostSpawned) {
-            FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
-                    32, 38, xMax, yMax, 5.0f,
-                    5.0f, 0.9f, 10, this);
-            createNewEntity(casper);
-            friendlyGhostSpawned = true;
-        }
         if (doubleTapTimer > 0) {
             doubleTapTimer--;
         }
@@ -263,6 +257,13 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             doubleTapTriggered = false;
         }
         if (!paused) {
+            if (score % 1000 == (difficulty * 400) && !friendlyGhostSpawned) {
+                FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
+                        32, 38, xMax, yMax, 5.0f,
+                        5.0f, 0.9f, 10, this);
+                createNewEntity(casper);
+                friendlyGhostSpawned = true;
+            }
             for (Entity e : entityList) {
                 e.update();
             }
@@ -277,6 +278,12 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
             } else {
                 timeCounter++;
             }
+            if(this.getBall().getItemStored() != null) {
+                if (this.getBall().getItemStored().getItemID().equals("RayGun")) {
+                    RayGun rayGun = (RayGun) this.getBall().getItemStored();
+                    rayGun.update();
+                }
+            }
         }
     }
 
@@ -286,7 +293,10 @@ public class MainActivity extends ActionBarActivity implements SensorEventListen
     }
 
     public void endGame() {
-
+        GameScreen.setScore(score);
+        Intent intent = new Intent(this, GameScreen.class);
+        this.startActivity(intent);
+        this.finish();
     }
 
     public boolean entityRemove(Entity e) {

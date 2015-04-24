@@ -4,6 +4,7 @@ import android.graphics.Point;
 
 import java.util.ArrayList;
 import android.graphics.*;
+import android.util.Log;
 
 /**
  * Created by JacksonEkis on 3/30/15.
@@ -29,7 +30,7 @@ public class Ghost extends Entity{
     protected float bounceFactor = 0.0f;
     private MainActivity.CustomDrawableView c ;
 
-    private boolean isColliding = false;
+    private Ghost collidingGhost = null;
 
     public Ghost(int xPosition, int yPosition, int fileID, Point target, Item booty, int health,
                  int hitBoxWidth, int hitBoxHeight, int xMax, int yMax, float xAcceleration,
@@ -59,10 +60,11 @@ public class Ghost extends Entity{
             ballTouching = main.getBall().isTouching();
             ballCharged = main.getBall().isCharged();
             handleCollisions();
-            if(ballTouching && !ballCharged && !frozen) {
-                if (isColliding) {
-                    xDynAcceleration = -((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
-                    yDynAcceleration = -((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
+            if(ballTouching && !(ballCharged || frozen)) {
+                if (collidingGhost != null) {
+                    Log.e("Ghost", "I collided with a ghost!");
+                    xDynAcceleration = -((float) (collidingGhost.centralPoint.x - centralPoint.x) / (float) xMax) * (3 * xOrigAcceleration);
+                    yDynAcceleration = -((float) (collidingGhost.centralPoint.y - centralPoint.y) / (float) yMax) * (3 * yOrigAcceleration);
                 } else {
                     xDynAcceleration = ((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
                     yDynAcceleration = ((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
@@ -127,55 +129,16 @@ public class Ghost extends Entity{
     {
         ArrayList<Entity> collisionArrayList = new ArrayList<>();
         collisionArrayList.addAll(collisionDetect(main.getEntityList()));
+        if (collisionArrayList.size() == 0) {
+            collidingGhost = null;
+        }
         for (Entity e : collisionArrayList)
         {
             if (e instanceof Ghost)
             {
-                isColliding = true;
+                collidingGhost = (Ghost) e;
             }
-            /*if (e instanceof Ball)
-            {
-                if (!main.getBall().isCharged()) {
-                Ball it = (Ball)e;
-
-                if (it.getItemStored() != null) {
-                    String id = it.getItemStored().getItemID();
-
-
-                    switch (id) {
-                        case "shield":
-                            main.getEntityList().remove(it);
-                            break;
-
-                        case "extraHealth":
-                            main.getBall().incHealth(30);
-                            main.getEntityList().remove(it);
-                            break;
-
-                        case "timeFreezer":
-                            frozen = true;
-                            main.getEntityList().remove(it);
-                            break;
-
-                        default:
-                            main.getBall().incHealth(-30);
-                            destroyer(DESTROYER_ID);
-                            break;
-                    }
-                }
-                    if (MainActivity.getDifficulty() == 2) {
-                        main.getBall().incHealth(-60);
-                        destroyer(DESTROYER_ID);
-                        break;
-                    } else {
-                        main.getBall().incHealth(-30);
-                        destroyer(DESTROYER_ID);
-                        break;
-                    }
-                }
-            }*/
         }
-        isColliding = collisionArrayList.size() > 1;
     }
 
 //    public void handleGhostToGhostCollision() {
