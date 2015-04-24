@@ -148,7 +148,7 @@ public class Ball extends Entity{
                 }
             }
 
-            else if (e instanceof Item)
+            if (e instanceof Item)
             {
                 Item it = (Item) e;
                 this.setItemStored(it);
