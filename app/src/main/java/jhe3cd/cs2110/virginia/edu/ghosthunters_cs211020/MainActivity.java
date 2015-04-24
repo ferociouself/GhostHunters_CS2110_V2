@@ -393,10 +393,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         public void chargerSensor() {
             if (ball.isCharged()) {
-                ballPaint.setColorFilter(cFilter);
+                ball.filterChanger(cFilter);
                 if (chargerX < initChargerX + 10) {
                     ball.setCharged(false);
-                    ballPaint.setColorFilter(null);
+                    ball.filterChanger(null);
                 } else {
                     if (miniChargerCounter >= CHARGER_DECAY_RATE - difficulty) {
                         chargerX--;
