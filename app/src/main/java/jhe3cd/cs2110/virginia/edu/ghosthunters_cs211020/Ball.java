@@ -118,7 +118,7 @@ public class Ball extends Entity{
 
     public boolean filterChanger(ColorFilter cFilter) {
         paint.setColorFilter(cFilter);
-        return paint.getColorFilter().equals(cFilter);
+        return paint.getColorFilter() != null;
     }
 
     public void handleCollisions() {
