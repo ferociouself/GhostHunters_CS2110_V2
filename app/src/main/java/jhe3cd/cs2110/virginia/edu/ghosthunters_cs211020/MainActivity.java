@@ -70,7 +70,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Paint pausedPaint;
     private Paint pausedWordPaint;
 
-    private ColorFilter cFilter;
+    public ColorFilter cFilter;
+    public ColorFilter shieldFilter;
 
     private int doubleTapTimer = 0;
     private boolean doubleTapTriggered = false;
@@ -93,8 +94,15 @@ public class MainActivity extends Activity implements SensorEventListener {
     public static final String SHIELD_ID = "shield";
     public static final String EXTRAHEALTH_ID = "extraHealth";
     public static final String TIMEFREEZER_ID = "timeFreezer";
+    public static final String FEAR_ID = "fear";
 
     private boolean paused = false;
+
+    public static final float FREQ_MODIFIER = 0.001f;
+
+    public static final int ITEM_TIME_ACTIVE = 20000;
+
+    public boolean ghostsFrozen = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +123,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         Display display = getWindowManager().getDefaultDisplay();
         size = new Point();
         display.getSize(size);
-        xMax = (int) (size.x * 0.94);
+        xMax = size.x;
         yMax = size.y;
 
         initHealthX = xMax - 400;
@@ -143,12 +151,14 @@ public class MainActivity extends Activity implements SensorEventListener {
         pausedWordPaint = new Paint();
 
         cFilter = new LightingColorFilter(Color.YELLOW, 1);
+        shieldFilter = new LightingColorFilter(Color.GREEN, 1);
 
         chargerPaint.setARGB(255, 0, 255, 255);
         barBGPaint.setARGB(200, 0, 0, 0);
         bgPaint.setARGB(255, 100, 100, 100);
         wordPaint.setARGB(255, 0, 0, 0);
-        wordPaint.setTextSize(50);
+        wordPaint.setTextSize(100);
+        wordPaint.setFakeBoldText(true);
         healthPaint.setARGB(255, 255, 0, 0);
         pausedPaint.setARGB(100, 0, 0, 0);
         pausedWordPaint.setARGB(255, 255, 255, 255);
@@ -189,6 +199,10 @@ public class MainActivity extends Activity implements SensorEventListener {
         entityList.add(e);
     }
 
+    public void spawnLoot(Item loot) {
+        entitiesAdded.add(loot);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event){
         int action = MotionEventCompat.getActionMasked(event);
@@ -205,11 +219,11 @@ public class MainActivity extends Activity implements SensorEventListener {
             ball.setTouching(false);
         }
 
-        if(this.getBall().getItemStored() != null) {
-            if (this.getBall().getItemStored().getItemID().equals("RayGun")) {
-                RayGun rayGun = (RayGun) this.getBall().getItemStored();
-                rayGun.updateTouch(event.getX(), event.getY());
-                rayGun.update();
+        if(ball.getItemStored() != null) {
+            if (ball.getItemStored().getItemID().equals("RayGun")) {
+                //RayGun rayGun = (RayGun) this.getBall().getItemStored();
+                //rayGun.updateTouch(event.getX(), event.getY());
+                ((RayGun) (ball.getItemStored())).updateTouch(event.getX(), event.getY());
             }
         }
 
@@ -253,15 +267,17 @@ public class MainActivity extends Activity implements SensorEventListener {
             doubleTapTriggered = false;
         }
         if (!paused) {
-            Random rand1 = new Random();
-            Random rand2 = new Random();
-
-            if(rand1.nextFloat() < .0001) entityList.add(new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
-            if(rand1.nextFloat() < .002 && rand1.nextFloat() >= 0.001) entityList.add(new Item(EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
-            if(rand1.nextFloat() < .0003 && rand1.nextFloat() >= 0.0002) entityList.add(new Item(TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
-            if(rand1.nextFloat() < .0004 && rand1.nextFloat() >= 0.0003) entityList.add(new RayGun(300, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, this));
-
-            if (score % 1000 == (difficulty * 400) && !friendlyGhostSpawned) {
+            Item generatedItem = generateItem(FREQ_MODIFIER);
+            if (generatedItem != null) {
+                entityList.add(generatedItem);
+            }
+            if (entitiesAdded.size() > 0) {
+                for (Entity e : entitiesAdded) {
+                    entityList.add(e);
+                }
+                entitiesAdded.clear();
+            }
+            if ((score % 1000 > (difficulty * 400) - 100 && score % 1000 < (difficulty * 400) + 100) && !friendlyGhostSpawned) {
                 FriendlyGhost casper = new FriendlyGhost(100, 100, R.drawable.friendly_ghost, 50,
                         32, 38, xMax, yMax, 5.0f,
                         5.0f, 0.9f, 10, this);
@@ -271,13 +287,12 @@ public class MainActivity extends Activity implements SensorEventListener {
             for (Entity e : entityList) {
                 e.update();
             }
-            for (Entity e : entitiesRemoved) {
-                entityList.remove(e);
+            if (entitiesRemoved.size() > 0) {
+                for (Entity e : entitiesRemoved) {
+                    entityList.remove(e);
+                }
+                entitiesRemoved.clear();
             }
-            for (Entity e : entitiesAdded) {
-                entityList.add(e);
-            }
-            entitiesRemoved.clear();
             healthX = initHealthX + ball.getHealth();
             if (timeCounter == 500) {
                 spawnNewGhosts();
@@ -285,13 +300,24 @@ public class MainActivity extends Activity implements SensorEventListener {
             } else {
                 timeCounter++;
             }
-            if(this.getBall().getItemStored() != null) {
-                if (this.getBall().getItemStored().getItemID().equals("RayGun")) {
-                    RayGun rayGun = (RayGun) this.getBall().getItemStored();
-                    rayGun.update();
-                }
-            }
         }
+    }
+
+    public Item generateItem(float freqModifier) {
+        Random rand1 = new Random();
+        Random rand2 = new Random();
+
+        Item generatedItem = null;
+
+        float itemDecider = rand1.nextFloat();
+
+        if(itemDecider < 1 * freqModifier) generatedItem = (new Item(SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax - 100), rand2.nextInt(yMax - 100), xMax, yMax, 40, 40, this));
+        if(itemDecider < 2 * freqModifier && itemDecider >= 1 * freqModifier) generatedItem = (new Item(EXTRAHEALTH_ID, 0, R.drawable.extra_health, rand2.nextInt(xMax - 100), rand2.nextInt(yMax - 100), xMax, yMax, 40, 40, this));
+        if(itemDecider < 3 * freqModifier && itemDecider >= 2 * freqModifier) generatedItem = (new Item(TIMEFREEZER_ID, 30, R.drawable.time_freezer, rand2.nextInt(xMax - 100), rand2.nextInt(yMax - 100), xMax, yMax, 40, 40, this));
+        if(itemDecider < 4 * freqModifier && itemDecider >= 3 * freqModifier) generatedItem = (new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax - 100), rand2.nextInt(yMax - 100), xMax, yMax, 40, 40, this));
+        if(itemDecider < 5 * freqModifier && itemDecider >= 4 * freqModifier) generatedItem = (new Item(FEAR_ID, 30, R.drawable.fear, rand2.nextInt(xMax - 100), rand2.nextInt(yMax - 100), xMax, yMax, 40, 40, this));
+
+        return generatedItem;
     }
 
     public int incScore(int scoreIncrease) {
@@ -306,8 +332,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         this.finish();
     }
 
-    public boolean entityRemove(Entity e) {
-        return entitiesRemoved.add(e);
+    public void entityRemove(Entity e) {
+        entitiesRemoved.add(e);
     }
 
     public Ball getBall() {
@@ -364,7 +390,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 canvas.drawRect(initChargerX, 50, chargerX, 100, chargerPaint);
                 canvas.drawRect(initHealthX - 10, 40, initHealthX + ball.getMaxHealth() + 10, 110, barBGPaint);
                 canvas.drawRect(initHealthX, 50, healthX, 100, healthPaint);
-                canvas.drawText("Score: " + score, xMax - 250, yMax - 50, wordPaint);
+                canvas.drawText("Score: " + score, xMax - 600, yMax - 100, wordPaint);
 
                 for (Entity e : entityList) {
                     if (e != ball) {

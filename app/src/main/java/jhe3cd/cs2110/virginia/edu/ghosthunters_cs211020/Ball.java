@@ -100,10 +100,12 @@ public class Ball extends Entity{
         if(timeFrozen == 0)
             freezeGhosts(false);
 
-        if (itemDurationCounter == 0) {
-            setItemStored(null);
-        } else {
-            itemDurationCounter--;
+        if (itemStored != null) {
+            if (itemDurationCounter == 0) {
+                setItemStored(null);
+            } else {
+                itemDurationCounter--;
+            }
         }
 
         if (health == 0) {
@@ -130,20 +132,21 @@ public class Ball extends Entity{
                 if (isCharged) {
                     e.destroyer(DESTROYER_ID);
                     main.incScore(100);
-                } else if (!isCharged && this.getItemStored() != null) {
-                    if (this.getItemStored().getItemID().equals("shield")) {
+                } else if (!isCharged && itemStored != null) {
+                    Log.i("BALL", "Item exists");
+                    if (itemStored.getItemID().equals("shield")) {
+                        Log.i("BALL", "This should not hurt.");
                         e.destroyer(DESTROYER_ID);
                         main.incScore(100);
+                        deactivateItem();
                     }
                 } else if (!isCharged) {
                     if (MainActivity.getDifficulty() == 2) {
                         incHealth(-60);
                         e.destroyer(DESTROYER_ID + "hurt");
-                        break;
                     } else {
                         incHealth(-30);
                         e.destroyer(DESTROYER_ID + "hurt");
-                        break;
                     }
                 }
             }
@@ -151,27 +154,47 @@ public class Ball extends Entity{
             if (e instanceof Item)
             {
                 Item it = (Item) e;
-                this.setItemStored(it);
-                it.destroyer(DESTROYER_ID);
-                itemDurationCounter = (int) ((Item) e).getDuration();
+
                 switch(it.getItemID())
                 {
-                    case "extraHealth":
+                    case MainActivity.EXTRAHEALTH_ID:
                         this.incHealth(30);
-                        this.setItemStored(null);
                         break;
-                    case "timeFrozen":
-                        freezeGhosts(true);
-                        timeFrozen = 20;
-                        this.setItemStored(null);
+                    case MainActivity.TIMEFREEZER_ID:
+                        //freezeGhosts(true);
+                        //timeFrozen = 300;
+                        if (getItemStored() != null) {
+                            deactivateItem();
+                        }
+                        this.setItemStored(it);
                         break;
-                    case "rayGun":
+                    case MainActivity.SHIELD_ID:
+                        if (!isCharged) {
+                            if (getItemStored() != null) {
+                                deactivateItem();
+                            }
+                            filterChanger(main.shieldFilter);
+                            this.setItemStored(it);
+                        }
                         break;
-
+                    case "RayGun":
+                        if (getItemStored() != null) {
+                            deactivateItem();
+                        }
+                        this.setItemStored(it);
+                        break;
+                    case MainActivity.FEAR_ID:
+                        if (getItemStored() != null) {
+                            deactivateItem();
+                        }
+                        this.setItemStored(it);
                     default:
                         break;
                 }
-
+                it.destroyer(DESTROYER_ID);
+                if (((Item) e).getDuration() > 0) {
+                    itemDurationCounter = (int) (((Item) e).getDuration() * 10);
+                }
             }
         }
 
@@ -180,7 +203,7 @@ public class Ball extends Entity{
 
     public void incHealth(int added)
     {
-        health += added;
+        if ((health + added) < maxHealth) health += added;
     }
 
     public void toggleTouching() {
@@ -241,17 +264,24 @@ public class Ball extends Entity{
 
     public void freezeGhosts(boolean b)
     {
-        for(Entity e : main.getEntityList())
+        main.ghostsFrozen = b;
+        /*for(Entity e : main.getEntityList())
         {
             if(e instanceof Ghost)
             {
                 Ghost g = (Ghost) e;
                 g.setFrozen(b);
             }
-        }
+        }*/
     }
 
     public void deactivateItem() {
         setItemStored(null);
+        itemDurationCounter = 0;
+        if (isCharged) {
+            filterChanger(main.cFilter);
+        } else {
+            filterChanger(null);
+        }
     }
 }

@@ -51,6 +51,7 @@ public class Ray extends Entity {
             if (e instanceof Ghost) {
                 Log.i("Ray", "Ghost collided with");
                 e.destroyer(DESTROYER_ID);
+                main.incScore(100);
             }
         }
     }

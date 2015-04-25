@@ -12,6 +12,8 @@ public class Item extends Entity
     protected String itemID;
     protected boolean activated;
 
+    protected int timeActive = 0;
+
     protected TreeMap <String,Integer> itemFrequency = new TreeMap <String,Integer>();
     protected ArrayList <String> randomList = new ArrayList<String>();
 
@@ -41,16 +43,12 @@ public class Item extends Entity
         }
     }
 
-    public void randomlyGenerate()
-    {
-        xPosition = (int)(Math.random()*(super.xMax - 10));
-        yPosition = (int)(Math.random()*(super.yMax - 10));
-        // Gives the item some wiggle room to display it's icon.
-    }
-
     public void update()
     {
-        // Items just sit there and get eaten by the ball, so no updates are needed here.
+        timeActive++;
+        if (timeActive > MainActivity.ITEM_TIME_ACTIVE) {
+            this.destroyer("Self");
+        }
     }
 
     public void destroyer(String destroyer)

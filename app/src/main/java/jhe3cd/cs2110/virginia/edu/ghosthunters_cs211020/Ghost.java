@@ -54,60 +54,87 @@ public class Ghost extends Entity{
 
     public void update()
     {
-        if(!frozen)
-        {
-            targetUpdate();
-            ballTouching = main.getBall().isTouching();
-            ballCharged = main.getBall().isCharged();
-            handleCollisions();
-            if(ballTouching && !(ballCharged || frozen)) {
-                if (collidingGhost != null) {
-                    xDynAcceleration = -((float) (collidingGhost.centralPoint.x - centralPoint.x) / (float) xMax) * (3 * xOrigAcceleration);
-                    yDynAcceleration = -((float) (collidingGhost.centralPoint.y - centralPoint.y) / (float) yMax) * (3 * yOrigAcceleration);
+        //frozen = (main.getBall().getItemStored() != null && main.getBall().getItemStored().getItemID().equals(MainActivity.TIMEFREEZER_ID));
+        if (main.getBall().getItemStored() != null) {
+            if (main.getBall().getItemStored().getItemID().equals(MainActivity.TIMEFREEZER_ID)){
+                frozen = true;
+                Log.i("GHOST", "I SHOULD BE FROZEN");
+            } else {
+                frozen = false;
+            }
+        } else {
+            frozen = false;
+        }
+
+        targetUpdate();
+        ballTouching = main.getBall().isTouching();
+        ballCharged = main.getBall().isCharged();
+        handleCollisions();
+        if(ballTouching/* && !(ballCharged || frozen)*/) {
+            if (ballCharged || frozen){
+                if (MainActivity.getDifficulty() == 2) {
+                    xDynAcceleration = 0.0f;
+                    yDynAcceleration = 0.0f;
+                } else {
+                    xDynAcceleration = 0.0f;
+                    yDynAcceleration = 0.0f;
+                    xVelocity = xVelocity * 0.90f;
+                    yVelocity = yVelocity * 0.95f;
+                }
+            }else if (collidingGhost != null) {
+                xDynAcceleration = -((float) (collidingGhost.centralPoint.x - centralPoint.x) / (float) xMax) * (3 * xOrigAcceleration);
+                yDynAcceleration = -((float) (collidingGhost.centralPoint.y - centralPoint.y) / (float) yMax) * (3 * yOrigAcceleration);
+            } else if (main.getBall().getItemStored() != null) {
+                if (main.getBall().getItemStored().getItemID().equals("fear")){
+                    xDynAcceleration = -((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
+                    yDynAcceleration = -((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
                 } else {
                     xDynAcceleration = ((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
                     yDynAcceleration = ((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
                 }
-                this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
-                this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
-            } else if (MainActivity.getDifficulty() == 2) {
-                xDynAcceleration = 0.0f;
-                yDynAcceleration = 0.0f;
             } else {
-                xDynAcceleration = 0.0f;
-                yDynAcceleration = 0.0f;
-                xVelocity = xVelocity * 0.90f;
-                yVelocity = yVelocity * 0.95f;
+                xDynAcceleration = ((float) (target.x - centralPoint.x) / (float) xMax) * xOrigAcceleration;
+                yDynAcceleration = ((float) (target.y - centralPoint.y) / (float) yMax) * yOrigAcceleration;
             }
-
-
-
-
-            //Calc distance travelled in that time
-            float xS = (xVelocity/2)*MainActivity.FRAME_TIME;
-            float yS = (yVelocity/2)*MainActivity.FRAME_TIME;
-            xPosition += xS;
-            yPosition += yS;
-
-            if (xPosition + hitBox.width() > xMax) {
-                xPosition = xMax - hitBox.width();
-                xVelocity = -(xVelocity * bounceFactor);
-            } else if (xPosition < 0) {
-                xPosition = 0;
-                xVelocity = -(xVelocity * bounceFactor);
-            }
-            if (yPosition + hitBox.height() > yMax) {
-                yPosition = yMax - hitBox.height();
-                yVelocity = -(yVelocity * bounceFactor);
-            } else if (yPosition < 0) {
-                yPosition = 0;
-                yVelocity = -(yVelocity * bounceFactor);
-            }
-
-            hitBoxUpdate();
-            centralPointUpdate();
+            this.xVelocity += (xDynAcceleration * MainActivity.FRAME_TIME);
+            this.yVelocity += (yDynAcceleration * MainActivity.FRAME_TIME);
+        } else if (MainActivity.getDifficulty() == 2) {
+            xDynAcceleration = 0.0f;
+            yDynAcceleration = 0.0f;
+        } else {
+            xDynAcceleration = 0.0f;
+            yDynAcceleration = 0.0f;
+            xVelocity = xVelocity * 0.90f;
+            yVelocity = yVelocity * 0.95f;
         }
 
+
+
+
+        //Calc distance travelled in that time
+        float xS = (xVelocity/2)*MainActivity.FRAME_TIME;
+        float yS = (yVelocity/2)*MainActivity.FRAME_TIME;
+        xPosition += xS;
+        yPosition += yS;
+
+        if (xPosition + hitBox.width() > xMax) {
+            xPosition = xMax - hitBox.width();
+            xVelocity = -(xVelocity * bounceFactor);
+        } else if (xPosition < 0) {
+            xPosition = 0;
+            xVelocity = -(xVelocity * bounceFactor);
+        }
+        if (yPosition + hitBox.height() > yMax) {
+            yPosition = yMax - hitBox.height();
+            yVelocity = -(yVelocity * bounceFactor);
+        } else if (yPosition < 0) {
+            yPosition = 0;
+            yVelocity = -(yVelocity * bounceFactor);
+        }
+
+        hitBoxUpdate();
+        centralPointUpdate();
+        bootyUpdate();
     }
 
     public void targetUpdate() {
@@ -116,7 +143,7 @@ public class Ghost extends Entity{
 
     public void destroyer(String destroyer) {
         if (booty != null && destroyer.equals("friendlyGhost")) {
-            //main.createNewEntity(booty);
+            main.spawnLoot(booty);
         }
         main.entityRemove(this);
     }
@@ -144,14 +171,16 @@ public class Ghost extends Entity{
     }
 
     private void getRandomItem() {
-        Random rand1 = new Random();
-        Random rand2 = new Random();
+        booty = main.generateItem(0.1f);
+    }
 
-        if(rand1.nextFloat() < .01) booty = new Item(main.SHIELD_ID, 30, R.drawable.shield, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main);
-        else if(rand1.nextFloat() < .02 && rand1.nextFloat() >= 0.01) booty = new Item(main.EXTRAHEALTH_ID, 30, R.drawable.extra_health, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main);
-        else if(rand1.nextFloat() < .03 && rand1.nextFloat() >= 0.02) booty = new Item(main.TIMEFREEZER_ID, 15, R.drawable.time_freezer, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main);
-        else if(rand1.nextFloat() < .04 && rand1.nextFloat() >= 0.03) booty = new RayGun(30, R.drawable.ray_gun, rand2.nextInt(xMax), rand2.nextInt(yMax), xMax, yMax, 80, 80, main);
-        else booty = null;
+    private void bootyUpdate() {
+        if (booty != null) {
+            booty.setxPosition(this.xPosition);
+            booty.setyPosition(this.yPosition);
+            booty.hitBoxUpdate();
+            booty.centralPointUpdate();
+        }
     }
 
     public float getxVelocity() {
