@@ -22,8 +22,6 @@ public class Ball extends Entity{
     public boolean isTouching;
     public boolean isCharged;
 
-    private int fileID;
-
     private Paint paint;
 
     private int health;
@@ -70,28 +68,35 @@ public class Ball extends Entity{
         float xS = (xVelocity)*MainActivity.FRAME_TIME;
         float yS = (yVelocity)*MainActivity.FRAME_TIME;
 
-        //Add to position negative due to sensor
-        //readings being opposite to what we want!
         xPosition += (int) xS;
         yPosition += (int) yS;
 
         // Creates the bouncing effect if the ball touches a side.
         if (xPosition + hitBox.width() > xMax) {
             xPosition = xMax - hitBox.width();
-            main.playSound();
+            xVelocity = -(xVelocity * bounceFactor);
+            if ((Math.abs(xVelocity) > 20.0f)) {
+                main.playSound();
+            }
         } else if (xPosition < 0) {
             xPosition = 0;
             xVelocity = -(xVelocity * bounceFactor);
-            main.playSound();
+            if ((Math.abs(xVelocity) > 20.0f)) {
+                main.playSound();
+            }
         }
         if (yPosition + hitBox.height() > yMax) {
             yPosition = yMax - hitBox.height();
             yVelocity = -(yVelocity * bounceFactor);
-            main.playSound();
+            if ((Math.abs(yVelocity) > 20.0f)) {
+                main.playSound();
+            }
         } else if (yPosition < 0) {
             yPosition = 0;
             yVelocity = -(yVelocity * bounceFactor);
-            main.playSound();
+            if ((Math.abs(yVelocity) > 20.0f)) {
+                main.playSound();
+            }
         }
 
         // MAKE SURE TO ALWAYS UPDATE THE HITBOX AND CENTRAL POINT AFTER MOVING FOR EACH ENTITY!!!
@@ -137,9 +142,7 @@ public class Ball extends Entity{
                     e.destroyer(DESTROYER_ID);
                     main.incScore(100);
                 } else if (!isCharged && itemStored != null) {
-                    Log.i("BALL", "Item exists");
                     if (itemStored.getItemID().equals("shield")) {
-                        Log.i("BALL", "This should not hurt.");
                         e.destroyer(DESTROYER_ID);
                         main.incScore(100);
                         deactivateItem();
@@ -165,8 +168,6 @@ public class Ball extends Entity{
                         this.incHealth(30);
                         break;
                     case MainActivity.TIMEFREEZER_ID:
-                        //freezeGhosts(true);
-                        //timeFrozen = 300;
                         if (getItemStored() != null) {
                             deactivateItem();
                         }
@@ -269,14 +270,6 @@ public class Ball extends Entity{
     public void freezeGhosts(boolean b)
     {
         main.ghostsFrozen = b;
-        /*for(Entity e : main.getEntityList())
-        {
-            if(e instanceof Ghost)
-            {
-                Ghost g = (Ghost) e;
-                g.setFrozen(b);
-            }
-        }*/
     }
 
     public void deactivateItem() {

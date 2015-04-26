@@ -82,39 +82,6 @@ public class FriendlyGhost extends Ghost{
         }
     }
 
-    @Deprecated
-    public ArrayList<Float> distanceBetweenGhosts() {
-        ArrayList<Float> distances = new ArrayList<Float>();
-        Point p1 = this.getCentralPoint();
-        ArrayList<Point> centralPoints = new ArrayList<Point>();
-        for(Entity e : main.getEntityList()) {
-            if(e instanceof Ghost) {
-                Ghost g1 = (Ghost) e;
-                Point p2 = g1.getCentralPoint();
-                centralPoints.add(p2);
-            }
-        }
-        for(Point p : centralPoints) {
-            double xDist = 0;
-            double yDist = 0;
-            if(p1.x > p.x) {
-                xDist = p1.x - p.x;
-            }
-            else if(p1.x < p.x) {
-                xDist = p.x - p1.x;
-            }
-            if(p1.y > p.y) {
-                yDist = p1.y - p.y;
-            }
-            else if(p1.y < p.y) {
-                yDist = p.y - p1.y;
-            }
-            float distance = (float) Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
-            distances.add(distance);
-        }
-        return distances;
-    }
-
     public static double distanceTwoPoints(Point p1, Point p2) {
         return Math.sqrt(Math.pow((p2.x - p1.x), 2) + Math.pow((p2.y - p1.y), 2));
     }

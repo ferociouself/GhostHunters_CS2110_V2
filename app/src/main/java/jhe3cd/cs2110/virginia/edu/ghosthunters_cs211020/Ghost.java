@@ -54,11 +54,9 @@ public class Ghost extends Entity{
 
     public void update()
     {
-        //frozen = (main.getBall().getItemStored() != null && main.getBall().getItemStored().getItemID().equals(MainActivity.TIMEFREEZER_ID));
         if (main.getBall().getItemStored() != null) {
             if (main.getBall().getItemStored().getItemID().equals(MainActivity.TIMEFREEZER_ID)){
                 frozen = true;
-                Log.i("GHOST", "I SHOULD BE FROZEN");
             } else {
                 frozen = false;
             }
@@ -70,7 +68,7 @@ public class Ghost extends Entity{
         ballTouching = main.getBall().isTouching();
         ballCharged = main.getBall().isCharged();
         handleCollisions();
-        if(ballTouching/* && !(ballCharged || frozen)*/) {
+        if(ballTouching) {
             if (ballCharged || frozen){
                 if (MainActivity.getDifficulty() == 2) {
                     xDynAcceleration = 0.0f;
@@ -81,7 +79,7 @@ public class Ghost extends Entity{
                     xVelocity = xVelocity * 0.90f;
                     yVelocity = yVelocity * 0.95f;
                 }
-            }else if (collidingGhost != null) {
+            } else if (collidingGhost != null) {
                 xDynAcceleration = -((float) (collidingGhost.centralPoint.x - centralPoint.x) / (float) xMax) * (3 * xOrigAcceleration);
                 yDynAcceleration = -((float) (collidingGhost.centralPoint.y - centralPoint.y) / (float) yMax) * (3 * yOrigAcceleration);
             } else if (main.getBall().getItemStored() != null) {

@@ -13,12 +13,10 @@ public class Ray extends Entity {
     private static final String DESTROYER_ID = "ray";
     private float xVelocity;
     private float yVelocity;
-    private Point target;
 
     public Ray(int fileID, int xPosition, int yPosition, int xMax, int yMax,
                int hitBoxWidth, int hitBoxHeight, MainActivity main, Point target) {
         super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
-        this.target = target;
         this.xVelocity = (target.x - main.getBall().getCentralPoint().x)/50;
         this.yVelocity = (target.y - main.getBall().getCentralPoint().y)/50;
     }
@@ -48,8 +46,7 @@ public class Ray extends Entity {
         collisionArrayList.addAll(collisionDetect(main.getEntityList()));
 
         for (Entity e : collisionArrayList) {
-            if (e instanceof Ghost) {
-                Log.i("Ray", "Ghost collided with");
+            if (e instanceof Ghost && !(e instanceof FriendlyGhost)) {
                 e.destroyer(DESTROYER_ID);
                 main.incScore(100);
             }
@@ -58,14 +55,5 @@ public class Ray extends Entity {
 
    public void destroyer(String destroyer) {
         main.entityRemove(this);
-   }
-
-   public void eliminate() {
-       for(Entity e : main.getEntityList()) {
-           if(e instanceof Ghost) {
-               main.getEntityList().remove(e);
-           }
-       }
-       this.destroyer(this.DESTROYER_ID);
    }
 }

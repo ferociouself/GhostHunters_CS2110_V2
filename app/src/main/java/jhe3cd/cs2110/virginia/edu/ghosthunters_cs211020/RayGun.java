@@ -12,8 +12,6 @@ import android.view.MotionEvent;
 public class RayGun extends Item {
 
     public static final String ITEM_ID = "RayGun";
-    private Ray ray;
-    private boolean isTouching;
 
     public RayGun(double duration, int fileID, int xPosition, int yPosition, int xMax, int yMax,
                   int hitBoxWidth, int hitBoxHeight, MainActivity main) {
@@ -21,7 +19,6 @@ public class RayGun extends Item {
     }
 
     public void updateTouch(float xPos, float yPos) {
-        Log.i("RayGun", "Spawning Ray towards " + xPos + ", " + yPos);
         Point target = new Point((int) xPos, (int) yPos);
         main.createNewEntity(new Ray(R.drawable.ray, main.getBall().getCentralPoint().x, main.getBall().getCentralPoint().y, this.xMax, this.yMax,
                 25, 25, main, target));
@@ -29,9 +26,6 @@ public class RayGun extends Item {
 
 
     public void update() {
-        timeActive++;
-        if (timeActive > MainActivity.ITEM_TIME_ACTIVE) {
-            this.destroyer("Self");
-        }
+        super.update();
     }
 }
