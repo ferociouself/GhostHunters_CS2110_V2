@@ -15,6 +15,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -30,6 +34,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import java.util.*;
 
+
 /**
  * Jackson Ekis: jhe3cd
  * Liam Dwyer: ljd3za
@@ -38,6 +43,7 @@ import java.util.*;
  */
 
 public class MainActivity extends Activity implements SensorEventListener {
+
 
     CustomDrawableView customDrawView = null;
     private int xMax, yMax;
@@ -104,6 +110,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     public boolean ghostsFrozen = false;
 
+    SoundPool bouncingSound;
+    int bounceId;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -134,8 +143,21 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         score = 0;
 
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            bouncingSound = new SoundPool.Builder().setMaxStreams(10).build();
+            bounceId = bouncingSound.load(this, R.raw.bouncing, 1);
+        }else{
+            bouncingSound = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
+            bounceId = bouncingSound.load(this, R.raw.bouncing, 1);
+        }
 
     }
+
+    public void playSound(){
+       bouncingSound.play(bounceId, 0.25f, 1, 1, 0, 1);
+    }
+
+
 
     public void setPaints() {
         genericPaint = new Paint();

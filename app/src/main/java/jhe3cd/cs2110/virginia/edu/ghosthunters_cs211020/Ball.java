@@ -2,6 +2,7 @@ package jhe3cd.cs2110.virginia.edu.ghosthunters_cs211020;
 
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -77,17 +78,20 @@ public class Ball extends Entity{
         // Creates the bouncing effect if the ball touches a side.
         if (xPosition + hitBox.width() > xMax) {
             xPosition = xMax - hitBox.width();
-            xVelocity = -(xVelocity * bounceFactor);
+            main.playSound();
         } else if (xPosition < 0) {
             xPosition = 0;
             xVelocity = -(xVelocity * bounceFactor);
+            main.playSound();
         }
         if (yPosition + hitBox.height() > yMax) {
             yPosition = yMax - hitBox.height();
             yVelocity = -(yVelocity * bounceFactor);
+            main.playSound();
         } else if (yPosition < 0) {
             yPosition = 0;
             yVelocity = -(yVelocity * bounceFactor);
+            main.playSound();
         }
 
         // MAKE SURE TO ALWAYS UPDATE THE HITBOX AND CENTRAL POINT AFTER MOVING FOR EACH ENTITY!!!
