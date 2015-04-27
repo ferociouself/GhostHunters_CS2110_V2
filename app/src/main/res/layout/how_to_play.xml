@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Touch the screen to charge up the ball. Ghosts will advance towards the ball when it is charging. Avoid ghosts; if they hit the ball, it loses health. When the ball reaches 0 health, it dies and the game is over. When the ball is charged up, run into ghosts to kill them. Ghosts will not advance towards you if you touch the screen while you are charged up."
+        android:text="@string/howToPlay"
         android:id="@+id/textView"
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_centerVertical="true"
