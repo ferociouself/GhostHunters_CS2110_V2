@@ -4,4 +4,39 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_game_screen">GameScreen</string>
+    <string name="howToPlay">Touch the screen to charge up the ball. Ghosts will advance towards the
+        ball when it is charging. Avoid ghosts; if they hit the ball, it loses health. When the ball
+        reaches 0 health, it dies and the game is over. When the ball is charged up, run into ghosts
+        to kill them. Ghosts will not advance towards you if you touch the screen while you are
+        charged up. Various items will spawn while you are playing. These items can help you
+        in various ways. Click the items button below to explore the various items there are.</string>
+    <string name="easyName">Difficulty: Easy</string>
+    <string name="mediumName">Difficulty: Medium</string>
+    <string name="hardName">Difficulty: Hard</string>
+    <string name="easyDesc">In Easy mode, you start with a Friendly Ghost, the ray gun has no
+    cooldown on shots per second, ghosts do normal damage, and charge runs out slowly.</string>
+    <string name="mediumDesc">In Medium mode, you do not start with a Friendly Ghost. Instead, you
+    must earn at least 400 points. A new one appears at every 1000 points after that first 400.
+    Ghosts do normal damage, the ray gun has a slight cooldown on how many rays can be shot per
+    second, and charge runs out at a normal rate.</string>
+    <string name="hardDesc">In Hard mode, you do not start with a Friendly Ghost. Instead, you must
+    earn at least 800 points on your own. A new one appears at every 1000 points after that first
+    800. In addition, ghosts do double damage, the ray gun has a long cooldown on how many rays can be
+    shot per second, and charge runs out quickly. Also, ghosts do not stop when you stop touching
+    the screen, and will continue in a straight line until stopped by continuous bounces.</string>
+    <string name="extraHealthName">Health Pack</string>
+    <string name="fearName">Ghost Repellent</string>
+    <string name="rayGunName">Ray Gun</string>
+    <string name="shieldName">Shield</string>
+    <string name="timeFreezerName">Ghost Freezer</string>
+    <string name="extraHealthDesc">Restores some lost health to the ball.</string>
+    <string name="fearDesc">The ghosts become scared of the ball for a short time, causing them to
+    run away from the ball when the screen is touched rather than towards it.</string>
+    <string name="rayGunDesc">The ball equips a ray gun, giving it the ability to shoot rays with
+    every touch of the screen. These rays pierce ghosts, rewarding 100 points for each ghost killed.</string>
+    <string name="shieldDesc">The ball equips a shield, protecting it from the damage of one ghost.
+    If a ghost is killed while wearing a shield, 100 points are awarded.</string>
+    <string name="timeFreezerDesc">The ghosts become frozen for a time, preventing them from directing
+    their movement. However, on hard difficulty, the ghosts continue to move; they simply stop
+    tracking the ball on touch. </string>
 </resources>

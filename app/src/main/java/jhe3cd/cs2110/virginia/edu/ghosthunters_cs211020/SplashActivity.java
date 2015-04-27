@@ -21,8 +21,8 @@ public class SplashActivity extends Activity{
     private static String TAG = SplashActivity.class.getName();
     private static long SLEEP_TIME = 5;
 
-    private static final int SPLASH_REDUCER_WIDTH = 250;
-    private static final int SPLASH_REDUCER_HEIGHT = 250;
+    private static final int SPLASH_REDUCER_WIDTH = 400;
+    private static final int SPLASH_REDUCER_HEIGHT = 400;
 
     @Override
     public void onCreate(Bundle savedInstanceState){

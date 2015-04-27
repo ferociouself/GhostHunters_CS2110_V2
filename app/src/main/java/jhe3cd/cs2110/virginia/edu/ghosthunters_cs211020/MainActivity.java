@@ -106,9 +106,12 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     public static final float FREQ_MODIFIER = 0.001f;
 
-    public static final int ITEM_TIME_ACTIVE = 20000;
+    public static final int ITEM_TIME_ACTIVE = 1000;
 
     public boolean ghostsFrozen = false;
+
+    public int rayCooldownCounter;
+    public static final int RAY_COOLDOWN = 100;
 
     SoundPool bouncingSound;
     int bounceId;
@@ -243,9 +246,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         if(ball.getItemStored() != null) {
             if (ball.getItemStored().getItemID().equals("RayGun")) {
-                //RayGun rayGun = (RayGun) this.getBall().getItemStored();
-                //rayGun.updateTouch(event.getX(), event.getY());
-                ((RayGun) (ball.getItemStored())).updateTouch(event.getX(), event.getY());
+                if (rayCooldownCounter >= RAY_COOLDOWN * difficulty) {
+                    ((RayGun) (ball.getItemStored())).updateTouch(event.getX(), event.getY());
+                    rayCooldownCounter = 0;
+                }
+
             }
         }
 
@@ -289,6 +294,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             doubleTapTriggered = false;
         }
         if (!paused) {
+            rayCooldownCounter++;
             Item generatedItem = generateItem(FREQ_MODIFIER);
             if (generatedItem != null) {
                 entityList.add(generatedItem);

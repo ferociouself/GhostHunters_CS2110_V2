@@ -75,26 +75,26 @@ public class Ball extends Entity{
         if (xPosition + hitBox.width() > xMax) {
             xPosition = xMax - hitBox.width();
             xVelocity = -(xVelocity * bounceFactor);
-            if ((Math.abs(xVelocity) > 20.0f)) {
+            if ((Math.abs(xVelocity) > 10.0f)) {
                 main.playSound();
             }
         } else if (xPosition < 0) {
             xPosition = 0;
             xVelocity = -(xVelocity * bounceFactor);
-            if ((Math.abs(xVelocity) > 20.0f)) {
+            if ((Math.abs(xVelocity) > 10.0f)) {
                 main.playSound();
             }
         }
         if (yPosition + hitBox.height() > yMax) {
             yPosition = yMax - hitBox.height();
             yVelocity = -(yVelocity * bounceFactor);
-            if ((Math.abs(yVelocity) > 20.0f)) {
+            if ((Math.abs(yVelocity) > 10.0f)) {
                 main.playSound();
             }
         } else if (yPosition < 0) {
             yPosition = 0;
             yVelocity = -(yVelocity * bounceFactor);
-            if ((Math.abs(yVelocity) > 20.0f)) {
+            if ((Math.abs(yVelocity) > 10.0f)) {
                 main.playSound();
             }
         }

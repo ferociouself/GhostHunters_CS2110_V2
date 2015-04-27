@@ -14,6 +14,8 @@ public class Ray extends Entity {
     private float xVelocity;
     private float yVelocity;
 
+    private int timeActive;
+
     public Ray(int fileID, int xPosition, int yPosition, int xMax, int yMax,
                int hitBoxWidth, int hitBoxHeight, MainActivity main, Point target) {
         super(fileID, xPosition, yPosition, xMax, yMax, hitBoxWidth, hitBoxHeight, main);
@@ -22,21 +24,26 @@ public class Ray extends Entity {
     }
 
     public void update() {
+        if (timeActive > MainActivity.ITEM_TIME_ACTIVE) {
+            destroyer(DESTROYER_ID);
+        } else {
+            timeActive++;
+        }
         xPosition += xVelocity * main.FRAME_TIME;
         yPosition += yVelocity * main.FRAME_TIME;
         this.hitBoxUpdate();
         this.centralPointUpdate();
         this.handleCollisions();
-        if(this.xPosition > xMax) {
+        if(this.xPosition >= xMax) {
             this.destroyer(this.DESTROYER_ID);
         }
-        if(this.xPosition < 0) {
+        if(this.xPosition <= 0) {
             this.destroyer(this.DESTROYER_ID);
         }
-        if(this.yPosition > yMax) {
+        if(this.yPosition >= yMax) {
             this.destroyer(this.DESTROYER_ID);
         }
-        if(this.yPosition < 0) {
+        if(this.yPosition <= 0) {
             this.destroyer(this.DESTROYER_ID);
         }
     }
